@@ -153,12 +153,22 @@ const toggleButton = createElement('div', 'LsSwGf SWVgue Y4klN', {
     jsaction: "keydown:I481le;dyRcpb:dyRcpb;click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc(preventDefault=true); touchcancel:JMtRjd;",
     jsshadow: "",
     jsname: "VVjirf",
-    'aria-label': "進行状況バーを表示",
+    'aria-label': "自動返信を有効にする",
     tabindex: "0",
     role: "checkbox",
     'aria-checked': "false"
 });
 toggleButtonContainer.appendChild(toggleButton);
+
+toggleButton.addEventListener('click', async function() {
+    const response = await chrome.runtime.sendMessage({ eventName: 'pushedActiveAutoReply' });
+    await console.log(response);
+    const user = await response.user;
+    const paid = await user.paid;
+    if (paid) {
+        const emailsAndQuestions = await chrome.runtime.sendMessage({ eventName: 'paidUser' });
+    }
+});
 
 const toggleButtonInner1 = createElement('div', 'hh4xKf MLPG7');
 toggleButton.appendChild(toggleButtonInner1);
