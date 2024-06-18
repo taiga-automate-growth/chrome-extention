@@ -12,9 +12,13 @@
     "action" : {} ,
     "author" : "oshima@automate-growth.com",
     "background" : "",
-    "content_scripts" : "",
-    "default_locale" : "ja",
+    "content_scripts" : [
+        {
+            "matches" : ["https://docs.google.com/forms/*"],
+            "js" : ["contents-script.js"]
+        }
+    ],
     "permissions" : [
-        
+
     ]
 }
