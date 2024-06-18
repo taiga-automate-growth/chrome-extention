@@ -161,12 +161,14 @@ const toggleButton = createElement('div', 'LsSwGf SWVgue Y4klN', {
 toggleButtonContainer.appendChild(toggleButton);
 
 toggleButton.addEventListener('click', async function() {
-    const response = await chrome.runtime.sendMessage({ eventName: 'pushedActiveAutoReply' });
-    await console.log(response);
-    const user = await response.user;
+    const checked = this.getAttribute('aria-checked');
+    if (checked === 'true') return false;
+    const user = await chrome.runtime.sendMessage({ eventName: 'pushedActiveAutoReply' });
+    console.log(user);
     const paid = await user.paid;
     if (paid) {
         const emailsAndQuestions = await chrome.runtime.sendMessage({ eventName: 'paidUser' });
+        console.log(emailsAndQuestions);
     }
 });
 
