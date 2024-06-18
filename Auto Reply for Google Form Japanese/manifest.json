@@ -1,24 +1,24 @@
 {
-    "manifest_version" : 3 ,
-    "name" : "Auto Reply Google Form for Japanese",
-    "version" : "0.1.0" , 
-    "description" : "Googleフォームに自動返信を設定する" , 
-    "icons" : {
-        "16" : "icon/16.png",
-        "32" : "icon/32.png",
-        "48" : "icon/48.png",
-        "128" : "icon/128.png"
+    "manifest_version": 3,
+    "name": "Auto Reply Google Form for Japanese",
+    "version": "0.1.0",
+    "description": "Googleフォームに自動返信を設定する",
+    "icons": {
+        "16": "icon/16.png",
+        "32": "icon/32.png",
+        "48": "icon/48.png",
+        "128": "icon/128.png"
     },
-    "action" : {} ,
-    "author" : "oshima@automate-growth.com",
-    "background" : "",
-    "content_scripts" : [
-        {
-            "matches" : ["https://docs.google.com/forms/*"],
-            "js" : ["contents-script.js"]
-        }
-    ],
-    "permissions" : [
+    "action": {},
+    "author": "oshima@automate-growth.com",
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [{
+        "matches": ["https://docs.google.com/forms/*"],
+        "js": ["contents-script.js"]
+    }],
+    "permissions": [
 
     ]
 }
