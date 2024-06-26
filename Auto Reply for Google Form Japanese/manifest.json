@@ -19,6 +19,6 @@
         "js": ["contents-script.js"]
     }],
     "permissions": [
-
+        "storage"
     ]
 }
