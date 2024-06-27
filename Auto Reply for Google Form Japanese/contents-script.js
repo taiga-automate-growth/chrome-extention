@@ -171,3 +171,160 @@ toggleButton.appendChild(toggleButtonInner3);
 
 const toggleButtonInner4 = createElement('div', 'E7QdY espmsb', { jsname: "IT5dJd" });
 toggleButtonInner3.appendChild(toggleButtonInner4);
+
+
+toggleButton.addEventListener('click', () => {
+    const replyFormConainer = document.getElementById('auto-reply-form-container');
+    replyFormConainer.classList.toggle('auto-reply-view');
+});
+
+// 自動返信専用フォームのコンテナ
+const replyFormContainer = createElement('div' , '' , {
+    id : 'auto-reply-form-container'
+});
+
+// コンテナをオプションリストに追加
+expandedContainer.appendChild(replyFormContainer);
+
+// 件名コンテナ
+const subjectContainer = createElement('div' , '' , {});
+
+// 件名コンテナをフォームコンテナに追加
+replyFormContainer.appendChild(subjectContainer);
+
+// 件名タイトル
+const subjectTitle = createElement('p' , '' , {},'件名');
+
+// 件名タイトルを件名コンテナに追加
+subjectContainer.appendChild(subjectTitle);
+
+// 件名フォーム
+const subjectForm = createElement('input' , '' ,{
+    type : 'text',
+    disabled : true
+});
+
+// 件名フォームをコンテナに追加
+subjectContainer.appendChild(subjectForm);
+
+// 本文コンテナ
+const bodyContainer = createElement('div' , '', {});
+replyFormContainer.appendChild(bodyContainer);
+
+// 本文タイトル
+const bodyTitle = createElement('p' , '' , {}, '本文');
+bodyContainer.appendChild(bodyTitle);
+
+// 本文フォーム
+const bodyForm = createElement('input' , '' , {
+    type : 'text',
+    disabled : true
+});
+bodyContainer.appendChild(bodyForm);
+
+// 差し込みコンテンツコンテナ
+const insertContentsContainer = createElement('div' , '' , {});
+replyFormContainer.appendChild(insertContentsContainer);
+
+// 差し込みコンテンツタイトル
+const insertContantsTitle = createElement('p' , '' , {} , '差し込みコンテンツ');
+insertContentsContainer.appendChild(insertContantsTitle);
+
+// 差し込みコンテンツフォーム
+const insertContantsForm = createElement('div' , '' , {});
+insertContentsContainer.appendChild(insertContantsForm);
+
+// 差し込みコンテンツ（チェックボックス）
+
+// 送信元アドレスコンテナ
+const fromAddressContainer = createElement('div' , '' , {});
+replyFormContainer.appendChild(fromAddressContainer);
+
+// 送信元アドレスタイトル
+const fromAddressTitle = createElement('p' , '' , {} ,  '送信元アドレス');
+fromAddressContainer.appendChild(fromAddressTitle);
+
+// 送信元アドレスフォーム
+const fromAddressForm = createElement('div' , '' , {} , '送信元アドレス');
+replyFormContainer.appendChild(fromAddressContainer);
+
+// 送信元アドレスコンテンツ（ラジオボタン）
+
+// 送信元アドレス注釈
+const fromAddressAnotation = createElement('p' , '' , {} , 
+    '※表示されるアドレスは現在ログイン中のGoogleアカウントGmailのエイリアスとして登録されているものに限ります。<br>Gmailエイリアス登録は<a>こちら<a>から'
+);
+fromAddressContainer.appendChild(fromAddressAnotation);
+
+// 送信元表示名コンテナ
+const fromNameContainer = createElement('div' , '' , {});
+replyFormContainer.appendChild(fromNameContainer);
+
+// 送信元表示名タイトル
+const fromNameTitle = createElement('p' , '' , {} , '送信元表示名');
+fromNameContainer.appendChild(fromNameTitle);
+
+// 送信元表示名フォーム
+const fromNameForm = createElement('input' , '' , {
+    type : 'text',
+    disabled : true
+});
+fromNameContainer.appendChild(fromNameForm);
+
+// CCコンテナ
+const ccContaiter = createElement('div' , '' , {});
+replyFormContainer.appendChild(ccContaiter);
+
+// CCタイトル
+const ccTitle = createElement('p' , '' , {} , 'CC');
+ccContaiter.appendChild(ccTitle);
+
+// CCフォーム
+const ccForm = createElement('input' , '' , {
+    placeholder : '複数ある場合はカンマ区切りで入力してください',
+    name : 'cc',
+    disabled : true
+});
+ccContaiter.appendChild(ccForm);
+
+// BCCコンテナ
+const bccContainer = createElement('div' , '' , {});
+replyFormContainer.appendChild(bccContainer);
+
+// BCCタイトル
+const bccTitle = createElement('p' , '' , {} , 'BCC');
+bccContainer.appendChild(bccTitle);
+
+// BCCフォーム
+const bccForm = createElement('input' , '' , {
+    placeholder : '複数ある場合はカンマ区切りで入力してください',
+    name : 'bcc',
+    disabled : true
+});
+bccContainer.appendChild(bccForm);
+
+// 添付ファイルコンテナ
+const attachmentFilesContainer = createElement('div' , '' , {});
+replyFormContainer.appendChild(attachmentFilesContainer);
+
+// 添付ファイルタイトル
+const attachmentFilesTitle = createElement('p' , '' , {} , '添付ファイル');
+attachmentFilesContainer.appendChild(attachmentFilesTitle);
+
+// 添付ファイルフォーム
+const attachmentFilesForm = createElement('input' , '' , {
+    type : 'file',
+    disabled : true
+});
+attachmentFilesContainer.appendChild(attachmentFilesForm);
+
+// 完了ボタン
+const doneButton = createElement('button' , '' , {} , '完了');
+replyFormContainer.appendChild(doneButton);
+
+// フォームの質問内容をすべて取得する関数
+
+// 送信元アドレスを取得する関数
+
+// 差し込みコンテンツをチェックしたときの処理
+    // チェックされた値を取得してそれを現在カーソルがあるところに書き込む
