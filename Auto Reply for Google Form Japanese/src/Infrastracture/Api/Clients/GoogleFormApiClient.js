@@ -1,15 +1,28 @@
 class GoogleFormApiClient extends GoogleApiClient{
-    #baseUrl;
-    #apiKey;
+    
+    /** @type {string} */
+	#baseUrl;
+	
+	/** @type {string} */
+	#apiKey;
+    
+    /**
+     * @constructor
+     */
     constructor(){
         super();
-        this.#baseUrl = `https://forms.googleapis.com/`;
+        this.#baseUrl = 'https://forms.googleapis.com/';
         this.#apiKey = 'AIzaSyC3bcvnfuWfXFr0xyJG-UHLsvar6dnhT1A';
     }
 
+    /** 
+     * @param {string} formId GoogleフォームのID
+     * @return {object} Googleフォームオブジェクト
+     */
     getForm(formId){
-        const parameters = this.createParams('GET');
-        fetch(`${this.#baseUrl}/v1/forms/${formId}?key=${this.#apiKey}`,parameters)
+        this.parameter.method = 'GET';
+        fetch(`${this.#baseUrl}/v1/forms/${formId}?key=${this.#apiKey}`,this.parameters)
+        .then(response => response.json())
         .then(form => {return form})
         .catch(error => {throw error});
     }
