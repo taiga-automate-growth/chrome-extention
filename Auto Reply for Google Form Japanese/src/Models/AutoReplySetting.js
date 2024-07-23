@@ -109,4 +109,22 @@ class AutoReplySetting{
             bcc: this.#bcc
         };
     }
+    
+    /**
+     *
+     */
+     output(){
+     	return {
+    		formId:this.#formId,
+    		scriptId:this.#scriptId,
+ 		    emailAddressCollectionType: this.#emailAddressCollectionType,
+    		activationStatus: this.#activationStatus,
+		    subject: this.#subject,
+		    body: this.#body,
+		    fromAddress: this.#fromAddress,
+		    fromName: this.#fromName,
+		    cc: this.#cc,
+    		bcc: this.#bcc		
+     	}
+     }
 }
