@@ -107,4 +107,12 @@ class AutoReplySetting{
 		if(this.#subject === "" || this.#body === "" || this.#fromAddress === "") return true;
 		return false;
 	}
+	
+	/**
+	 * @return {string}
+	 */
+	getFormId(){
+		return this.#formId;
+	}
+
 }
