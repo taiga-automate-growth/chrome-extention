@@ -34,25 +34,14 @@ class GoogleAppsScriptApiClient extends GoogleApiClient{
 	}
 	
 	/**
-	 * @param {Array<Script>} files GASのスクリプトファイル
 	 * @param {string} scriptId 更新するスクリプトのID
+	 * @param {Array<Object>} files GASのスクリプトファイル
 	 */
-	updateScript(files, scriptId){
+	updateScript(scriptId, files){
 		this.parameters.method = 'POST';
 		this.parameters.body = {files: JSON.stringfy(files)};
 		fetch(`${this.#baseUrl}/v1/projects/${scriptId}/content?key=${this.#apiKey}`, this.parameters)
 		.then(response => response.json())
-	
-	
-	}
-	
-	deploy(){
-	
-	
-	}
-	
-	
-	executeFunction(){
 	
 	
 	}

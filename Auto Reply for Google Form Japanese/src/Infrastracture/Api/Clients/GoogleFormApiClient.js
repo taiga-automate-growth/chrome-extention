@@ -17,7 +17,7 @@ class GoogleFormApiClient extends GoogleApiClient{
 
     /** 
      * @param {string} formId GoogleフォームのID
-     * @return {object} Googleフォームオブジェクト
+     * @return {Object} Googleフォームオブジェクト
      */
     getForm(formId){
         this.parameter.method = 'GET';
