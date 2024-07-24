@@ -43,7 +43,7 @@ class BrowserLocalStorageAutoReplySettingRepository{
      */
     save(autoReplySetting){
         const formId = autoReplySetting.getFormId();
-        const saveData = autoReplySetting.getAsSaveData();
+        const saveData = autoReplySetting.getAsObject();
         this.#allSettingDatas[formId] = saveData;
         chrome.storage.local.set(this.#allSettingDatas)
         .then(() => {})
