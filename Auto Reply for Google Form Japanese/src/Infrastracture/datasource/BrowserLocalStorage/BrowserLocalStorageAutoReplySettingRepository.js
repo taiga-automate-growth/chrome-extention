@@ -20,20 +20,7 @@ class BrowserLocalStorageAutoReplySettingRepository{
         const settingData = allSettingDatas["auto-reply-google-form-for-japanese"][googleFormId];
         if(Object.keys(settingData).length === 0) throw new Error('このフォームに関する情報は保存されていません');
 
-        let scriptId, emailAddressCollectionType, status, subject, body, fromAddress, fromName, cc, bcc, insertContents, aliases;
-        if('emailAddressCollectionType' in settingData) emailAddressCollectionType = settingData.emailAddressCollectionSetting;
-        if('activationStatus' in settingData) activationStatus = settingData.activationStatus;
-        if('scriptid' in settingData) scriptId = settingData.scriptId;
-        if('subject' in settingData) subject = settingData.subject;
-        if('body' in settingData) body = settingData.body;
-        if('fromAddress' in settingData) fromAddress = settingData.fromAddress;
-        if('fromName' in settingData) fromName = settingData.fromName;
-        if('cc' in settingData) cc = settingData.cc;
-        if('bcc' in settingData) bcc = settingData.bcc;
-        if('insertContents' in settingData) insertContents = settingData;
-        if('aliases' in settingData) aliases = settingData.aliases;
-
-        return new AutoReplySetting(googleFormId, scriptId, emailAddressCollectionType,activationStatus, subject, body, fromAddress, fromName, cc, bcc,insertContents,aliases);
+        return new AutoReplySetting(settingData);
     }
 
     /**

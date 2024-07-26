@@ -23,7 +23,7 @@ class GoogleFormApiClient extends GoogleApiClient{
         this.parameter.method = 'GET';
         fetch(`${this.#baseUrl}/v1/forms/${formId}?key=${this.#apiKey}`,this.parameters)
         .then(response => response.json())
-        .then(form => {return form})
+        .then(json => {return json.form})
         .catch(error => {throw error});
     }
 }

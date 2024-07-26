@@ -79,6 +79,13 @@ class AutoReplySetting{
 	}
 	
 	/**
+	 * 
+	 */
+	deactivate(){
+		this.#status = false;
+	}
+	
+	/**
 	 * @param {Array<string>} insertContents 
 	 */
 	setInsertContents(insertContents){
@@ -114,5 +121,52 @@ class AutoReplySetting{
 	getFormId(){
 		return this.#formId;
 	}
-
+	
+	/**
+	 * @return {Boolean}
+	 */
+	hasScript(){
+		if(this.#scriptId !== undefined || this.#scriptId !== '') return true;
+		return false;
+	}
+	
+	/**
+	 * @return {string}
+	 */
+	getSubject(){
+		return this.#subject;
+	}
+	
+	/**
+	 * @return {string}
+	 */
+	getBody(){
+		return this.#body;
+	}
+	
+	/**
+	 * @return {Object}
+	 */
+	getMailOption(){
+		return {
+			from: this.#fromAddress,
+			name: this.#fromName,
+			cc: this.#cc,
+			bcc: this.#bcc
+		}
+	}
+	
+	/**
+	 * @return {string}
+	 */
+	getScriptId(){
+		return this.#scriptId;
+	}
+	
+	/**
+	 * @param {string} scriptId
+	 */
+	setScriptId(scriptId){
+		this.#scriptId = scriptId;
+	}
 }
