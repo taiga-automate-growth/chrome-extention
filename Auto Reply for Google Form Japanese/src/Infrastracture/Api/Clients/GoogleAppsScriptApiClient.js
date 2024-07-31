@@ -26,7 +26,7 @@ class GoogleAppsScriptApiClient extends GoogleApiClient{
 			title: title,
 			parentId: parentId
 		}
-		this.parameters.body = JSON.stringfy(body};
+		this.parameters.body = JSON.stringfy(body);
 		fetch(`${this.#baseUrl}/v1/projects?key=${this.#apiKey}`, this.parameters)
 		.then(response => response.json())
 		.then(project => {return project;})
