@@ -1,4 +1,4 @@
-class AutoReplySetting{
+export class AutoReplySetting{
     /** @type {string} */
     #formId;
     
@@ -50,7 +50,8 @@ class AutoReplySetting{
         this.#insertContents = settingDatas.insertContents ?? "";
         this.#aliases = settingDatas.aliases ?? "";
     }
-    
+
+    
     /**
      * @return {Object} settingDatas
      */
@@ -59,7 +60,7 @@ class AutoReplySetting{
     		formId:this.#formId,
     		scriptId:this.#scriptId,
  		    emailAddressCollectionType: this.#emailAddressCollectionType,
-    		activationStatus: this.#activationStatus,
+    		activationStatus: this.#status,
 		    subject: this.#subject,
 		    body: this.#body,
 		    fromAddress: this.#fromAddress,
@@ -103,7 +104,7 @@ class AutoReplySetting{
 	 * @return {Boolean}
 	 */
 	isCollectEmail(){
-		if(this.#emailCollectionType === "収集しない") return false;
+		if(this.#emailAddressCollectionType === "収集しない") return false;
 		return true;
 	}
 	

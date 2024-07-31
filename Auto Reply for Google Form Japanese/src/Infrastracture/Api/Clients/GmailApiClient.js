@@ -1,4 +1,4 @@
-class GmailApiClient extends GoogleApiClient{
+export class GmailApiClient extends GoogleApiClient{
     /** @type {string} */
 	#baseUrl;
 	

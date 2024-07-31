@@ -1,4 +1,4 @@
-class GoogleAppsScriptApiClient extends GoogleApiClient{
+export class GoogleAppsScriptApiClient extends GoogleApiClient{
 	
 	/** @type {string} */
 	#baseUrl;

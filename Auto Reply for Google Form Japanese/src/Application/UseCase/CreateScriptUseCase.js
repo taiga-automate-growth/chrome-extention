@@ -1,4 +1,8 @@
-class CreateScriptUseCase{
+import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
+import {ApiRequestMessage} from '../../Infrastracture/Api/Request/ApiRequestMessage.js';
+import {AutoReplySetting} from '../../Domain/Models/AutoReplySetting.js';
+
+export class CreateScriptUseCase{
 	/**
 	 * @param {string} formId フォームID
 	 * @param {Object} inputData フォームに入力されたデータ
@@ -39,7 +43,7 @@ class CreateScriptUseCase{
 		        autoReplySetting.setScriptId(res.scriptId)
 		        repository.save(autoReplySetting);
 	        })
-	        .catch(e => throw new ApiRequestFailedException());
+	        .catch(e => {throw new ApiRequestFailedException()});
         }
         
         const manifestFile = {
@@ -101,7 +105,7 @@ class CreateScriptUseCase{
         
         new ApiRequestMessage('Apps Script','updateScript')
         .send({scriptId: autoReplySetting, files: [manifestFile, scriptFile]})
-        .then(res => return res.scriptId)
-        .catch(e => throw e);
+        .then(res => {return res.scriptId})
+        .catch(e => {throw e});
 	}
 }

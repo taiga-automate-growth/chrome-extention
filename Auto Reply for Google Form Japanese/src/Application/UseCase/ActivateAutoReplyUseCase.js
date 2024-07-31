@@ -1,4 +1,7 @@
-class ActivateAutoReplyUseCase{
+import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
+import {ApiRequestMessage} from '../../Infrastracture/Api/Request/ApiRequestMessage.js';
+
+export class ActivateAutoReplyUseCase{
 
 	handle(formId){
 	
@@ -13,14 +16,14 @@ class ActivateAutoReplyUseCase{
 			
 			new ApiRequestMessage('form','getForm')
 			.send({formId: formId})
-			.then(form => {form.items;})
-			.catch(e => throw e);
+			.then(form => {form.items})
+			.catch(e => {throw e});
 			
 			new ApiRequestMessage('gmail','getAliases').send()
 			.then(res => firstTimeData.aliases = res.sendAs)
-			.catch(e => throw e);
+			.catch(e => {throw e});
 			
-			return firstTiteData;
+			return firstTimeData;
 		}
 		
 	}

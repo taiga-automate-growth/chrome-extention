@@ -1,4 +1,7 @@
-class UpdateInsertContentsUseCase{
+import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
+import {ApiRequestMessage} from '../../Infrastracture/Api/Request/ApiRequestMessage.js';
+
+export class UpdateInsertContentsUseCase{
 
 	/**
 	 * @param {string} formId
@@ -23,6 +26,6 @@ class UpdateInsertContentsUseCase{
 			}
 		
 		})
-		.catch(e => throw e);
+		.catch(e => {throw e});
 	}
 }

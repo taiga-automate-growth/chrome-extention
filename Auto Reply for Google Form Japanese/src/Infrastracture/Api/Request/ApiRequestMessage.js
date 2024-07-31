@@ -1,18 +1,18 @@
-class ApiRequestMessage{
+export class ApiRequestMessage{
     /** @type {string} */
     #apiName;
     
     /** @type {string} */
-    #requestDetail
+    #action
     
     /** 
      * @constructor
      * @param {string} apiName
-     * @param {string} requestDetail
+     * @param {string} action
      */
-    constructor(apiName, requestDetail){
+    constructor(apiName, action){
         this.#apiName = apiName;
-        this.#requestDetail = requestDetail
+        this.#action = action
     }
 
     /**
@@ -22,7 +22,7 @@ class ApiRequestMessage{
     send(params = {}){
         const message = {
             apiName: this.#apiName,
-            requestDetail: this.#requestDetail
+            action: this.#action
         }
         if(Object.keys(params).length > 0){
             message.params = params;

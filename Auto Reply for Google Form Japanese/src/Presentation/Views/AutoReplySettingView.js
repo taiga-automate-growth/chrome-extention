@@ -1,4 +1,4 @@
-class AutoReplySettingView{
+export class AutoReplySettingView{
 
 	/** @type {HTMLElement} */
 	#allitems;
@@ -198,7 +198,11 @@ class AutoReplySettingView{
 		toggleButtonInner3.appendChild(toggleButtonInner4);
 		
 		this.#status = toggleButton;
-		toggleButton.addEventListener('click',)
+		toggleButton.addEventListener('click',function(e){
+			const active = e.currentTarget.getAttribute('aria-checked');
+			if(active === 'false') this.activate.bind(this);
+			if(active === 'true') this.deactivate.bind(this);
+		});
 		
 		// 自動返信専用フォームのコンテナ
 		const replyFormContainer = this.#createElement('div' , '' , {});
@@ -234,7 +238,7 @@ class AutoReplySettingView{
 		
 		// 更新ボタン
 		const insertContentsRefreshSvgNS = "http://www.w3.org/2000/svg";
-		const insertContentsRefreshButton = document.this.#createElementNS(insertContentsRefreshSvgNS, "svg");
+		const insertContentsRefreshButton = document.createElementNS(insertContentsRefreshSvgNS, "svg");
 		insertContentsRefreshButton.setAttribute("xmlns", insertContentsRefreshSvgNS);
 		insertContentsRefreshButton.setAttribute("width", "16");
 		insertContentsRefreshButton.setAttribute("height", "16");
@@ -244,12 +248,12 @@ class AutoReplySettingView{
 		insertContentsRefreshButton.setAttribute("style", "margin-top:12px;")
 		
 		// 最初のパス要素を作成
-		const insertContentsRefreshPath1 = document.this.#createElementNS(insertContentsRefreshSvgNS, "path");
+		const insertContentsRefreshPath1 = document.createElementNS(insertContentsRefreshSvgNS, "path");
 		insertContentsRefreshPath1.setAttribute("fill-rule", "evenodd");
 		insertContentsRefreshPath1.setAttribute("d", "M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z");
 		
 		// 2番目のパス要素を作成
-		const insertContentsRefreshPath2 = document.this.#createElementNS(insertContentsRefreshSvgNS, "path");
+		const insertContentsRefreshPath2 = document.createElementNS(insertContentsRefreshSvgNS, "path");
 		insertContentsRefreshPath2.setAttribute("d", "M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z");
 		
 		// パス要素をSVGに追加
@@ -354,7 +358,7 @@ class AutoReplySettingView{
 		fromAddressTitleContainer.appendChild(fromAddressRefreshButtonContainer);
 		
 		const fromAddressSvgNS = "http://www.w3.org/2000/svg";
-		const fromAddressRefreshButton = document.this.#createElementNS(fromAddressSvgNS, "svg");
+		const fromAddressRefreshButton = document.createElementNS(fromAddressSvgNS, "svg");
 		fromAddressRefreshButton.setAttribute("xmlns", fromAddressSvgNS);
 		fromAddressRefreshButton.setAttribute("width", "16");
 		fromAddressRefreshButton.setAttribute("height", "16");
@@ -364,12 +368,12 @@ class AutoReplySettingView{
 		fromAddressRefreshButton.setAttribute("style", "margin-top:12px;")
 		
 		// 最初のパス要素を作成
-		const fromAddressPath1 = document.this.#createElementNS(fromAddressSvgNS, "path");
+		const fromAddressPath1 = document.createElementNS(fromAddressSvgNS, "path");
 		fromAddressPath1.setAttribute("fill-rule", "evenodd");
 		fromAddressPath1.setAttribute("d", "M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z");
 		
 		// 2番目のパス要素を作成
-		const fromAddressPath2 = document.this.#createElementNS(fromAddressSvgNS, "path");
+		const fromAddressPath2 = document.createElementNS(fromAddressSvgNS, "path");
 		fromAddressPath2.setAttribute("d", "M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z");
 		
 		// パス要素をSVGに追加
@@ -481,8 +485,8 @@ class AutoReplySettingView{
 
 	}
 	
-	#this.#createElement(tag, className, attributes, innerHTML) {
-	    const element = document.this.#createElement(tag);
+	#createElement(tag, className, attributes, innerHTML) {
+	    const element = document.createElement(tag);
 	    if (className) element.className = className;
 	    if (attributes) {
 	        for (const key in attributes) {
@@ -491,7 +495,7 @@ class AutoReplySettingView{
 	            }
 	        }
 	    }
-	    if (innerHTML) element.innerHTML = innerHTML;
+	    if (innerHTML) element.innerText = innerHTML;
 	    return element;
 	}
 	
@@ -527,7 +531,7 @@ class AutoReplySettingView{
 		// 挿入元の親となるDOMを取得
 		const parent = document.getElementsByClassName('aDRHlc')[0];
 		
-		const formId = this.#getFormId();
+		const formId = this.getFormId();
 		
 		// 自動返信トグルのクリックイベントにリスナーを追加
 		this.#status.addEventListener('click', function(){
@@ -541,7 +545,7 @@ class AutoReplySettingView{
 		});
 		
 		// スクリプト作成ボタンのクリックイベントにリスナーを追加
-		this.#createScript.addEventListener('click', function(){
+		this.#createScriptButton.addEventListener('click', function(){
 			createScriptCallback(this.getInputData(),formId);
 		});
 		
@@ -617,7 +621,7 @@ class AutoReplySettingView{
 		}
 		
 		if('aliases' in datas && datas.aliases !== undefined){
-			this.#updateAliases(datas.aliases);
+			this.#updateAliasesButton(datas.aliases);
 			
 		}
 		
@@ -634,7 +638,7 @@ class AutoReplySettingView{
 		}
 		
 		if('insertContents' in datas && datas.insertContents !== undefined){
-			this.#updateInsertContents(datas.insertContents);
+			this.#updateInsertContentsButton(datas.insertContents);
 		}
 	}
 	
@@ -661,6 +665,7 @@ class AutoReplySettingView{
             label.style.color = 'black';
         }
 	}
+
 	
 	/** @return {object} */
 	getInputData(){
@@ -687,7 +692,7 @@ class AutoReplySettingView{
 			fromName: this.#fromName.value,
 			cc: this.#cc.value,
 			bcc: this.#bcc.value,
-			insertContents: insertContents
+			insertContents: insertContents,
 			aliases : aliases
 		}
 	}
@@ -773,5 +778,4 @@ class AutoReplySettingView{
 	        aliasContainer.appendChild(label);
 	    }
 	}	
-	
 }

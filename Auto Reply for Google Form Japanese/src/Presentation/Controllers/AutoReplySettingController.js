@@ -1,4 +1,11 @@
-class AutoReplySettingController{
+import {GetAutoReplySettingUseCase} from '../../Application/UseCase/GetAutoReplySettingUseCase.js';
+import {ActivateAutoReplyUseCase} from '../../Application/UseCase/ActivateAutoReplyUseCase.js';
+import {CreateScriptUseCase} from '../../Application/UseCase/CreateScriptUseCase.js';
+import {DeactivateAutoReplyUseCase} from '../../Application/UseCase/DeactivateAutoReplyUseCase.js';
+import {UpdateInsertContentsUseCase} from '../../Application/UseCase/UpdateInsertContentsUseCase.js';
+import {UpdateAliasesUseCase} from '../../Application/UseCase/UpdateAliasesUseCase.js';
+
+export class AutoReplySettingController{
 	
 	/** @type {AutoReplySettingView} */
 	#view;
@@ -18,10 +25,10 @@ class AutoReplySettingController{
 	
 	index(){
 		const formId = this.#view.getFormId();
+		const settingData = new GetAutoReplySettingUseCase().handle(formId);
 		
 		try{
 		
-			const settingData = new GetAutoReplySettingUseCase().handle(formId);
 			this.#view.update(settingData);
 			this.#view.view(
 				this.activate.bind(this),
@@ -32,13 +39,13 @@ class AutoReplySettingController{
 			);
 			
 		}catch(e){
-			
+			console.error(e.toString());
 		}
 	}
 	
 	activate(formId){
 		new ActivateAutoReplyUseCase().handle(formId);
-		this.#view.activate();
+		this.#view.activate(data);
 	}
 	
 	createScript(inputData,formId){
@@ -57,7 +64,7 @@ class AutoReplySettingController{
 	}
 	
 	updateAliases(formId){
-		const aliases = new UpdateAliasesUsaCase().handle(formId);
+		const aliases = new UpdateAliasesUseCase().handle(formId);
 		this.#view.updateAliases(aliases);
 	}
 

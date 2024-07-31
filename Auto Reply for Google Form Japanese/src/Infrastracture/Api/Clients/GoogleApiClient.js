@@ -1,5 +1,4 @@
-class GoogleApiClient{
-　　 
+export class GoogleApiClient{ 
 	/**
      * @type {string}
      * @protected

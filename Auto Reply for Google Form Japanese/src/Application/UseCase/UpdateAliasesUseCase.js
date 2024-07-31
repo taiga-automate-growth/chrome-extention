@@ -1,4 +1,7 @@
-class UpdateAliasesUseCase{
+import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
+import {ApiRequestMessage} from '../../Infrastracture/Api/Request/ApiRequestMessage.js';
+
+export class UpdateAliasesUseCase{
 	handle(formId){
 		new ApiRequestMessage('Gmail', 'getAliases').send()
 		.then(gmail => {
@@ -18,6 +21,6 @@ class UpdateAliasesUseCase{
 			}
 		
 		})
-		.catch(e => throw e);
+		.catch(e => {throw e});
 	}
 }

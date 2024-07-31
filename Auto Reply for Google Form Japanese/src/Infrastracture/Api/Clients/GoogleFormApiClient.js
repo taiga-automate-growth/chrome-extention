@@ -1,4 +1,4 @@
-class GoogleFormApiClient extends GoogleApiClient{
+export class GoogleFormApiClient extends GoogleApiClient{
     
     /** @type {string} */
 	#baseUrl;

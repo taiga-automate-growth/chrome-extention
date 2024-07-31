@@ -1,4 +1,8 @@
-class ApiRequester{
+import { GoogleFormApiClient } from "../Clients/GoogleFormApiClient.js";
+import { GmailApiClient } from "../Clients/GmailApiClient.js";
+import { GoogleAppsScriptApiClient } from "../Clients/GoogleAppsScriptApiClient.js";
+
+export class ApiRequester{
 
     /** @type {Object} */
     #message;
@@ -9,6 +13,14 @@ class ApiRequester{
     /** @callback Response */
     /** @type {Response} */
     #response;
+
+    /**
+     * @constructor
+     */
+    constructor(message, sendResponse){
+        this.#message = message;
+        this.#response = sendResponse;
+    }
 
 	/**
 	 * @param {string} apiName
@@ -23,7 +35,7 @@ class ApiRequester{
                 return new GmailApiClient();
                 break;
             case 'Apps Script':
-                return new AppsScriptApiClient();
+                return new GoogleAppsScriptApiClient();
                 break;
             default:
                 throw new ApiClientNotFoundException();
@@ -36,19 +48,19 @@ class ApiRequester{
         
         const apiClient = this.#generateApiClient(this.#message.apiName);
             
-        if(this.#message.requestDetail === 'getForm'){
+        if(this.#message.action === 'getForm'){
             
 	        this.#response(apiClient.getForm());
             
-        }else if(this.#message.requestDetail === 'getAliases'){
+        }else if(this.#message.action === 'getAliases'){
         
 	        this.#response(apiClient.getAlieses());
             
-        }else if(this.#message.requestDetail === 'createScript'){
+        }else if(this.#message.action === 'createScript'){
         
 	        this.#response(apiClient.createScript());
 	        
-        }else if(this.#message.requestDetail === 'updateScript'){
+        }else if(this.#message.action === 'updateScript'){
         
 	        this.#response(apiClient.updateScript());
         }

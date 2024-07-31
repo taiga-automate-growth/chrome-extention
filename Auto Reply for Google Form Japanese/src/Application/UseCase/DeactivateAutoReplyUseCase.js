@@ -1,4 +1,7 @@
-class DeactivateAutoReplyUseCase{
+import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
+import {ApiRequestMessage} from '../../Infrastracture/Api/Request/ApiRequestMessage.js';
+
+export class DeactivateAutoReplyUseCase{
 
 	handle(formId){
 		const repository = new BrowserLocalStorageAutoReplySettingRepository();
@@ -27,9 +30,9 @@ class DeactivateAutoReplyUseCase{
 	        }
 			
 			new ApiRequestMessage('Apps Script', 'updateScript')
-			.send({scriptId: autoReplySetting.getScriptId(), files[manifestFile]})
+			.send({scriptId: autoReplySetting.getScriptId(), files: [manifestFile]})
 			.then(res => {})
-			.catch(e => throw e);
+			.catch(e => {throw e});
 			
 		}catch(e){
 
