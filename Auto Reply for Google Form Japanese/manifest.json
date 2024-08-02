@@ -12,11 +12,12 @@
     "action": {},
     "author": "oshima@automate-growth.com",
     "background": {
-        "service_worker": "background/background.js"
+        "service_worker": "src/Infrastracture/background/background.js",
+        "type": "module"
     },
     "content_scripts": [{
         "matches": ["https://docs.google.com/forms/d/*"],
-        "js": ["contents/contents-script.js"]
+        "js": ["src/loader.js"]
     }],
     "permissions": [
         "identity",
@@ -34,5 +35,14 @@
             "https://www.googleapis.com/auth/script.deployments",
             "https://www.googleapis.com/auth/drive"
         ]
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["src/*"],
+            "matches": ["<all_urls>"]
+          }
+    ],
+    "externally_connectable": {
+        "matches": ["https://docs.google.com/forms/d/*"]
     }
 }
