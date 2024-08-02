@@ -8,7 +8,7 @@ export class GetAutoReplySettingUseCase{
 			const autoReplySetting = repository.findByFormId(formId);
 			return autoReplySetting.getAsObject();
 		}catch(e){
-			console.error(e.toStoring());
+			console.error(e);
 			return {status: false};
 		}
 	}

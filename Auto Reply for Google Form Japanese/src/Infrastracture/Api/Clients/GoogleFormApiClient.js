@@ -1,3 +1,5 @@
+import { GoogleApiClient } from "./GoogleApiClient.js";
+
 export class GoogleFormApiClient extends GoogleApiClient{
     
     /** @type {string} */
