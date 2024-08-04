@@ -2,35 +2,19 @@ import { AutoReplySetting } from "../../../Domain/Models/AutoReplySetting.js";
 import { BackgroundMessage } from "../../background/BackgroundMessage.js";
 
 export class BrowserLocalStorageAutoReplySettingRepository{
-    #allSettingDatas;
-    constructor(){
-        const allSettingDatas = new BackgroundMessage('dataSourceAccess', 'BrowserLocalStorage', 'getAutoReplySetting').send();
-        console.log(allSettingDatas);
-        
-        // .then(allSettingDatas => {
-        //     this.#allSettingDatas = allSettingDatas;
-        // })
-        // .catch(() => {
-        //     throw new DataNotFoundException('ブラウザのローカルストレージ内にデータがありません');
-        // })
-        // chrome.storage.local.get(["auto-reply-google-form-for-japanese"])
-        // .then(allSettingDatas => {
-        //     this.#allSettingDatas = allSettingDatas;
-        // })
-        // .catch(() => {
-        //     throw new Error('ブラウザにこの拡張機能専用の格納領域が設定されていません');
-        // });
-    }
 
     /**
      * 復元
      * 
      * @param {string} googleFormId GoogleフォームのID
-     * @return {AutoReplySetting} 自動返信設定インスタンス 
+     * @return {Promise} 自動返信設定インスタンス 
      */
-    findByFormId(googleFormId){
-        const settingData = this.#allSettingDatas["auto-reply-google-form-for-japanese"][googleFormId];
-        if(Object.keys(settingData).length === 0) throw new Error('このフォームに関する情報は保存されていません');
+    async findByFormId(googleFormId){
+        const allDatas = await new BackgroundMessage('dataSourceAccess', 'BrowserLocalStorage', 'getAutoReplySetting')
+        .send()
+        const settingData = allDatas["auto-reply-google-form-for-japanese"][googleFormId];
+        console.log(settingData);
+        if(Object.keys(settingData).length === 0) throw new DataNotFoundException('このフォームに関する情報は保存されていません');
 
         return new AutoReplySetting(settingData);
     }
@@ -39,17 +23,20 @@ export class BrowserLocalStorageAutoReplySettingRepository{
      * 永続化
      * 
      * @param {AutoReplySetting} autoReplySetting 自動返信設定インスタンス
+     * @return {Promise}
      */
     save(autoReplySetting){
         const formId = autoReplySetting.getFormId();
         const saveData = autoReplySetting.getAsObject();
-        this.#allSettingDatas[formId] = saveData;
-        new BackgroundMessage('BrowserLocalStorage', 'saveAutoReplySetting', 'dataSourceAccess').send()
-        // chrome.storage.local.set(this.#allSettingDatas)
-        // .then(() => {})
-        // .catch(() => {
-        //     delete this.#allSettingDatas[formId];
-        //     throw new Error('データの保存に失敗しました');
-        // });
+
+        new BackgroundMessage('dataSourceAccess', 'BrowserLocalStorage', 'getAutoReplySetting')
+        .send()
+        .then(allDatas => {
+            allDatas[formId] = saveData;
+            new BackgroundMessage('BrowserLocalStorage', 'saveAutoReplySetting', 'dataSourceAccess')
+            .send({data: saveData})
+            .then(() => {})
+            .catch(error => {throw error});
+        });
     }
 }
