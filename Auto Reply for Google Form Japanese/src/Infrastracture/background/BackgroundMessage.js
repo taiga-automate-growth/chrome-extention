@@ -28,6 +28,11 @@ export class BackgroundMessage{
         this.#action = action;
     }
 
+    /**
+     * 
+     * @param {Object} params
+     * @return {Promise} 
+     */
     send(params = {}){
         const message = {
             type: this.#type,
@@ -39,14 +44,15 @@ export class BackgroundMessage{
             message.params = params;
         }
         
-        chrome.runtime.sendMessage(this.#extensionId, message)
-        .then(response => {
-            console.log(response);
-            return response;
-        })
-        .catch(error => {
-            console.log(error);
-            return error;
+        return new Promise((resolve,reject) => {
+
+            chrome.runtime.sendMessage(this.#extensionId, message)
+            .then(response => {
+                console.log('バックグラウンドから取得したデータです');
+                console.log(response);
+                resolve(response);})
+            .catch(error => {reject(error);});
         });
+    
     }
 }
