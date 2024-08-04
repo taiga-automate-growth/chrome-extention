@@ -2,13 +2,15 @@ import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastractur
 
 export class GetAutoReplySettingUseCase{
 	
-	handle(formId){
+	async handle(formId){
 		const repository = new BrowserLocalStorageAutoReplySettingRepository();
+		
 		try{
-			const autoReplySetting = repository.findByFormId(formId);
-			return autoReplySetting.getAsObject();
+			const autoReplySetting = await repository.findByFormId(formId);
+			const savedData = autoReplySetting.getAsObject();
+			return savedData;
 		}catch(e){
-			console.error(e);
+			console.log(e);
 			return {status: false};
 		}
 	}
