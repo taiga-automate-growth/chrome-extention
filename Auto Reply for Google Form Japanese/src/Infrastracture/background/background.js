@@ -1,4 +1,4 @@
-import { BackgroundMediator } from "../../Infrastracture/background/BackgroundMadiator.js";
+import { BackgroundMessagePort } from "./BackgroundMessagePort.js";
 
 // インストールしたとき（バージョンアップも含む）
 chrome.runtime.onInstalled.addListener(() => {
@@ -32,10 +32,9 @@ chrome.runtime.onInstalled.addListener(() => {
 // // 外部スクリプトからメッセージを受信したとき
 chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
     console.log('バックグラウンドにメッセージが届いています');
-    new BackgroundMediator(message, sender, sendResponse)
-    .mediate();
-    sendResponse(message);
-})
+    new BackgroundMessagePort(message, sender, sendResponse)
+    .sort();
+});
 
 // chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     
