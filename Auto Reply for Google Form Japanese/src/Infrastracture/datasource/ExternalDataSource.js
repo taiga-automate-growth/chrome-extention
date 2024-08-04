@@ -1,39 +1,55 @@
 import { BrowserLocalStorage } from "./BrowserLocalStorage/BrowserLocalStorage.js";
 
 export class ExternalDataSource{
-    /** @type {Object} */
-    #message;
-    
-    /** @type {Object} */
-    #sender;
-    
-    /** @callback Response */
-    /** @type {Response} */
-    #response;
 
+    /** @type {string} */
+    #dataSource;
+
+    /** @type {string} */
+    #action;
+
+    /** @type {object} */
+    #data;
      /**
      * @constructor
      */
-     constructor(message, sender, sendResponse){
-        this.#message = message;
-        this.#sender = sender;
-        this.#response = sendResponse;
+     constructor(message){
+        this.#dataSource = message.resource;
+        this.#action = message.action;
+        this.#data = message.params ?? {};
     }
 
-    #generateDataSource(resource){
-        if(resource === 'BrowserLocalStorage'){
+    #generateDataSource(dataSource){
+        if(dataSource === 'BrowserLocalStorage'){
             return new BrowserLocalStorage();
         }
     }
     
+    /**
+     *  @return {Promise}
+     */
     access(){
-        const dataSource = this.#generateDataSource(this.#message.resource);
+        console.log('外部データソースへアクセス開始');
+        console.log(this);
+        const dataSource = this.#generateDataSource(this.#dataSource);
 
-        if(this.#message.action === 'getAutoReplySetting'){
-            this.#response(dataSource.get('autoReplySetting'));
+        if(this.#action === 'getAutoReplySetting'){
 
-        }else if(this.#message.action === 'saveAutoReplySetting'){
-            this.#response(dataSource.save(this.#message.data));
+            return new Promise((resolve,reject) => {
+                dataSource.get('auto-reply-google-form-for-japanese')
+                .then(savedData => {
+                    console.log('ローカルストレージから取得したデータです');
+                    console.log(savedData);
+                    resolve(savedData)})
+                .catch(error => {reject(error)});
+            });
+
+        }else if(this.#action === 'saveAutoReplySetting'){
+            return new Promise((resolve,reject) => {
+                dataSource.save(this.#data)
+                .then(result => {resolve(result)})
+                .catch(error => reject(error));
+            });
         }
     }
 }
