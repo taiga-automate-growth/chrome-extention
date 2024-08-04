@@ -1,0 +1,43 @@
+import { ExternalApi } from "../Api/Request/ExternalApi.js";
+import { ExternalDataSource } from "../datasource/ExternalDataSource.js";
+
+export class BackgroundMessagePort{
+    /** @type {Object} */
+    #message;
+    
+    /** @type {Object} */
+    #sender;
+    
+    /** @callback Response */
+    /** @type {Response} */
+    #sendResponse;
+
+    /**
+     * @constructor
+     */
+    constructor(message, sender, sendResponse){
+        this.#message = message;
+        this.#sender = sender;
+        this.#sendResponse = sendResponse;
+    }
+
+    /**
+     * 
+     */
+    sort(){
+        console.log('メッセージ仕分け開始');
+        if(this.#message.type === 'ApiRequest'){
+            new ExternalApi(this.#message).request()
+            .then(result => this.#sendResponse(result))
+            .catch(error => this.#sendResponse(error));
+
+        }else if(this.#message.type === 'dataSourceAccess'){
+            new ExternalDataSource(this.#message).access()
+            .then(result => {
+                console.log('外部データソースから取得したデータです')
+                console.log(result);
+                this.#sendResponse(result)})
+            .catch(error => this.#sendResponse(error));
+        }
+    }
+}
