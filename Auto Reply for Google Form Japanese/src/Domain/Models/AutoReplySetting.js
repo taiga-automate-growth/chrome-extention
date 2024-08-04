@@ -39,7 +39,7 @@ export class AutoReplySetting{
     constructor(settingDatas){
         this.#formId = settingDatas.formId ?? "";
         this.#scriptId = settingDatas.scriptId ?? "";
-        this.#emailAddressCollectionType = settignDatas.emailAddressCollectionSetting ?? "";
+        this.#emailAddressCollectionType = settingDatas.emailAddressCollectionSetting ?? "";
         this.#status = settingDatas.status ?? "";
         this.#subject = settingDatas.subject ?? "";
         this.#body = settingDatas.body ?? "";
