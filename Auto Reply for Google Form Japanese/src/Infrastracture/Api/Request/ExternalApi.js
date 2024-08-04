@@ -1,26 +1,26 @@
 import { GoogleFormApiClient } from "../Clients/GoogleFormApiClient.js";
 import { GmailApiClient } from "../Clients/GmailApiClient.js";
 import { GoogleAppsScriptApiClient } from "../Clients/GoogleAppsScriptApiClient.js";
+import { GoogleApiClient } from "../Clients/GoogleApiClient.js";
 
 export class ExternalApi{
 
-    /** @type {Object} */
-    #message;
-    
-    /** @type {Object} */
-    #sender;
-    
-    /** @callback Response */
-    /** @type {Response} */
-    #response;
+    /** @type {string} */
+    #apiName;
+
+    /** @type {string} */
+    #action;
+
+    /** @type {object} */
+    #params;
 
     /**
      * @constructor
      */
-    constructor(message, sender, sendResponse){
-        this.#message = message;
-        this.#sender = sender;
-        this.#response = sendResponse;
+    constructor(message){
+        this.#apiName = message.resource;
+        this.#action = message.action;
+        this.#params = message.params ?? {};
     }
 
 	/**
@@ -44,26 +44,44 @@ export class ExternalApi{
         }
     }
     
-    /** */
+    /** 
+     * @return {Promise}
+     */
     request(){
         
-        const apiClient = this.#generateApiClient(this.#message.apiName);
+        const apiClient = this.#generateApiClient(this.#apiName);
+
+        if(this.#action === 'getForm'){
             
-        if(this.#message.action === 'getForm'){
+            return new Promise((resolve, reject) => {
+                apiClient.getForm()
+                .then(form => resolve(form))
+                .catch(error => reject(error));
+            });
             
-	        this.#response(apiClient.getForm());
+        }else if(this.#action === 'getAliases'){
+
+            return new Promise((resolve,reject) =>{
+                apiClient.getAlieses()
+                .then(aliases => resolve(aliases))
+                .catch(error => reject(error));
+            });
+
+        }else if(this.#action === 'createScript'){
             
-        }else if(this.#message.action === 'getAliases'){
-        
-	        this.#response(apiClient.getAlieses());
-            
-        }else if(this.#message.action === 'createScript'){
-        
-	        this.#response(apiClient.createScript());
+            return new Promise((resolve,reject) =>{
+                apiClient.createScript(this.#params.title, this.#params.scriptId)
+                .then(project => resolve(project))
+                .catch(error => reject(error));
+            });
 	        
-        }else if(this.#message.action === 'updateScript'){
+        }else if(this.#action === 'updateScript'){
         
-	        this.#response(apiClient.updateScript());
+            return new Promise((resolve,reject) =>{
+                apiClient.updateScript(this.#params.scriptId, this.#params.files)
+                .then(project => resolve(project))
+                .catch(error => reject(error));
+            });
         }
     }
 }

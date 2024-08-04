@@ -17,13 +17,16 @@ export class GmailApiClient extends GoogleApiClient{
     }
 
     /** 
-     * @return {object} エイリアスオブジェクト
+     * @return {Promise}
      */
     getAliases(){
         this.parameter.method = 'GET';
-        fetch(`${this.#baseUrl}/v1/users/me/settings/sendAs?key=${this.#apiKey}`,this.parameters)
-        .then(response => response.json())
-        .then(ailiases => {return ailiases})
-        .catch(error => {throw error});
+        return new Promise((resolve,reject) =>{
+
+            fetch(`${this.#baseUrl}/v1/users/me/settings/sendAs?key=${this.#apiKey}`,this.parameters)
+            .then(response => response.json())
+            .then(ailiases => resolve(ailiases))
+            .catch(error => reject(error));
+        });
     }
 }

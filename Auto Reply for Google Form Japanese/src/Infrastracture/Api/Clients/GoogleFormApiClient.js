@@ -19,13 +19,16 @@ export class GoogleFormApiClient extends GoogleApiClient{
 
     /** 
      * @param {string} formId GoogleフォームのID
-     * @return {Object} Googleフォームオブジェクト
+     * @return {Promise} 
      */
     getForm(formId){
         this.parameter.method = 'GET';
-        fetch(`${this.#baseUrl}/v1/forms/${formId}?key=${this.#apiKey}`,this.parameters)
-        .then(response => response.json())
-        .then(json => {return json.form})
-        .catch(error => {throw error});
+        return new Promise((resolve,reject) => {
+
+            fetch(`${this.#baseUrl}/v1/forms/${formId}?key=${this.#apiKey}`,this.parameters)
+            .then(response => response.json())
+            .then(json => resolve(json.form))
+            .catch(error => reject(error));
+        });
     }
 }

@@ -20,7 +20,7 @@ export class GoogleAppsScriptApiClient extends GoogleApiClient{
 	/** 
 	 * @param {string} title スクリプトのタイトル
 	 * @param {string} parentId スクリプトを紐づけるGoogleサービスのID
-	 * @return {object} GASプロジェクトオブジェクト
+	 * @return {Promise}
 	 */
 	createScript(title, parentId){
 		this.parameters.method = 'POST';
@@ -29,21 +29,29 @@ export class GoogleAppsScriptApiClient extends GoogleApiClient{
 			parentId: parentId
 		}
 		this.parameters.body = JSON.stringfy(body);
-		fetch(`${this.#baseUrl}/v1/projects?key=${this.#apiKey}`, this.parameters)
-		.then(response => response.json())
-		.then(project => {return project;})
-		.catch(error => {return error;});
+		return new Promise((resolve,reject) => {
+			fetch(`${this.#baseUrl}/v1/projects?key=${this.#apiKey}`, this.parameters)
+			.then(response => response.json())
+			.then(project => resolve(project))
+			.catch(error => reject(error));
+		})
 	}
 	
 	/**
 	 * @param {string} scriptId 更新するスクリプトのID
 	 * @param {Array<Object>} files GASのスクリプトファイル
+	 * @return {Promise}
 	 */
 	updateScript(scriptId, files){
 		this.parameters.method = 'POST';
 		this.parameters.body = {files: JSON.stringfy(files)};
-		fetch(`${this.#baseUrl}/v1/projects/${scriptId}/content?key=${this.#apiKey}`, this.parameters)
-		.then(response => response.json())
+
+		return new Promise((resolve,reject) => {
+			fetch(`${this.#baseUrl}/v1/projects/${scriptId}/content?key=${this.#apiKey}`, this.parameters)
+			.then(response => response.json())
+			.then(project => resolve(project))
+			.catch(error => reject(error));
+		});
 	
 	
 	}
