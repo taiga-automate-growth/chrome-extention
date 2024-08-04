@@ -626,7 +626,7 @@ export class AutoReplySettingView{
 				this.#insertContents.removeChild(this.#insertContents.firstChild)
 			}
 
-			for(let ailias of datas.ailias.sendAs){
+			for(let ailias of datas.ailias){
 
 				const ailiasContainer = this.#createElement('div' , 'ailias' , {
 					style:'display:flex; align-items:center;'
