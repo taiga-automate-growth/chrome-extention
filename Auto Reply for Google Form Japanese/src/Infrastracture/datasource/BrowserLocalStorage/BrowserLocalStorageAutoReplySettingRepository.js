@@ -33,7 +33,7 @@ export class BrowserLocalStorageAutoReplySettingRepository{
         .send()
         .then(allDatas => {
             allDatas[formId] = saveData;
-            new BackgroundMessage('BrowserLocalStorage', 'saveAutoReplySetting', 'dataSourceAccess')
+            new BackgroundMessage('dataSourceAccess', 'BrowserLocalStorage', 'saveAutoReplySetting')
             .send({data: saveData})
             .then(() => {})
             .catch(error => {throw error});
