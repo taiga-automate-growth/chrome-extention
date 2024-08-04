@@ -23,9 +23,9 @@ export class AutoReplySettingController{
 	}
 	
 	
-	index(){
+	async index(){
 		const formId = this.#view.getFormId();
-		const settingData = new GetAutoReplySettingUseCase().handle(formId);
+		const settingData = await new GetAutoReplySettingUseCase().handle(formId);
 		
 		try{
 		
