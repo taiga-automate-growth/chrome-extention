@@ -198,7 +198,7 @@ export class AutoReplySettingView{
 		toggleButtonInner3.appendChild(toggleButtonInner4);
 		
 		this.#status = toggleButton;
-		toggleButton.addEventListener('click',function(e){
+		toggleButton.addEventListener('click',(e) => {
 			const active = e.currentTarget.getAttribute('aria-checked');
 			if(active === 'false') this.activate.bind(this);
 			if(active === 'true') this.deactivate.bind(this);
@@ -608,37 +608,79 @@ export class AutoReplySettingView{
 	
 	/** @param {object} datas*/
 	update(datas){
-		if('status' in datas && datas.status !== undefined){
+		console.log(datas);
+		if('status' in datas && datas.status !== ""){
 			this.#status.setAttribute('aria-checked',datas.status);
 		}
 		
-		if('subject' in datas && datas.subject !== undefined){
+		if('subject' in datas && datas.subject !== ""){
 			this.#subject.value = datas.subject;
 		}
 		
-		if('body' in datas && datas.body !== undefined){
+		if('body' in datas && datas.body !== ""){
 			this.#body.value = datas.body;
 		}
 		
-		if('aliases' in datas && datas.aliases !== undefined){
-			this.#updateAliasesButton(datas.aliases);
+		if('aliases' in datas && datas.aliases !== ""){
+			while(this.#insertContents.hasChildNodes()){
+				this.#insertContents.removeChild(this.#insertContents.firstChild)
+			}
+
+			for(let ailias of datas.ailias.sendAs){
+
+				const ailiasContainer = this.#createElement('div' , 'ailias' , {
+					style:'display:flex; align-items:center;'
+				});
+
+				this.#fromAddress.appendChild(ailiasContainer);            
+
+				const radioButton = this.#createElement('input' , '' , {
+					type:'radio',
+					name:'auto-reply-select-fromAddress',
+					id:`ailias-address-${ailias.sendAsEmail}`,
+					value: ailias.sendAsEmail
+				});
+
+				ailiasContainer.appendChild(radioButton);
+
+				const label = createElement('label' , '' , {
+					for:`ailias-address-${ailias.sendAsEmail}`,
+					style: 'font-size:0.75rem;'
+				},ailias.sendAsEmail);
+
+				ailiasContainer.appendChild(label);
+			}
 			
 		}
 		
-		if('fromName' in datas && datas.fromName !== undefined){
+		if('fromName' in datas && datas.fromName !== ""){
 			this.#fromName.value = datas.fromName;
 		}
 		
-		if('cc' in datas && datas.cc !== undefined){
+		if('cc' in datas && datas.cc !== ""){
 			this.#cc.value = datas.cc;
 		}
 		
-		if('bcc' in datas && datas.bcc !== undefined){
+		if('bcc' in datas && datas.bcc !== ""){
 			this.#bcc.value = datas.bcc;
 		}
 		
-		if('insertContents' in datas && datas.insertContents !== undefined){
-			this.#updateInsertContentsButton(datas.insertContents);
+		if('insertContents' in datas && datas.insertContents !== ""){
+			while(this.#insertContents.hasChildNodes()){
+				this.#insertContents.removeChild(this.#insertContents.firstChild);
+			}
+		
+			// フォームの質問をループ
+			for(let question of datas.insertContents){
+		
+				// 質問タイトルをpタグで入れる
+				const title = question.title;
+				const insertContent = this.#createElement('p' , 'insert-content' , {
+					style: 'font-size:0.75rem; margin-block-start:0; margin-block-end:0; cursor:pointer; border-bottom:0.5px solid gainsboro'
+				} , `{{${title}}}`);
+				this.#insertContents.appendChild(insertContent);
+				insertContent.addEventListener('click', this.#insert.bind(this));
+			}
 		}
 	}
 	
