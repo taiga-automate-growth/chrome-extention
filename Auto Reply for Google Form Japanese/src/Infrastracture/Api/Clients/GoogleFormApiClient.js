@@ -21,14 +21,32 @@ export class GoogleFormApiClient extends GoogleApiClient{
      * @param {string} formId GoogleフォームのID
      * @return {Promise} 
      */
-    getForm(formId){
-        this.parameter.method = 'GET';
+    async getForm(formId){
+        console.log(formId);
+        console.log('フォームAPIにGETリクエストを送ります');
+        await this.getAuthToken();
+        console.log(this.token);
         return new Promise((resolve,reject) => {
 
-            fetch(`${this.#baseUrl}/v1/forms/${formId}?key=${this.#apiKey}`,this.parameters)
-            .then(response => response.json())
-            .then(json => resolve(json.form))
-            .catch(error => reject(error));
+            fetch(`${this.#baseUrl}/v1/forms/${formId}?key=${this.#apiKey}`,{
+                method: 'GET',
+                headers: {
+                    Authorization:'Bearer ' + this.token,
+                    'Content-Type':'application/json'
+                },
+                'contentType': 'json'
+            })
+            .then(response => {
+                console.log(response);
+                return response.json()
+            })
+            .then(form => {
+                console.log(form);
+                resolve(form)})
+            .catch(error => {
+                console.log(error);
+                reject(error)
+            });
         });
     }
 }
