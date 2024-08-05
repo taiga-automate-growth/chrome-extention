@@ -43,9 +43,10 @@ export class AutoReplySettingController{
 		}
 	}
 	
-	activate(formId){
-		new ActivateAutoReplyUseCase().handle(formId);
-		this.#view.activate(data);
+	async activate(formId){
+		const activationData = await new ActivateAutoReplyUseCase().handle(formId);
+		this.#view.update(activationData);
+		this.#view.activate();
 	}
 	
 	createScript(inputData,formId){
