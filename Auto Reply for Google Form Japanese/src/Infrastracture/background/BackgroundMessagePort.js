@@ -26,9 +26,13 @@ export class BackgroundMessagePort{
      */
     sort(){
         console.log('メッセージ仕分け開始');
+        console.log(this.#message);
         if(this.#message.type === 'ApiRequest'){
             new ExternalApi(this.#message).request()
-            .then(result => this.#sendResponse(result))
+            .then(result => {
+                console.log('外部APIへのリクエスト結果です');
+                console.log(result);
+                this.#sendResponse(result)})
             .catch(error => this.#sendResponse(error));
 
         }else if(this.#message.type === 'dataSourceAccess'){
