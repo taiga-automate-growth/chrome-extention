@@ -1,29 +1,44 @@
 import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
-import {ApiRequestMessage} from '../../Infrastracture/Api/Request/ApiRequestMessage.js';
+import { BackgroundMessage } from '../../Infrastracture/background/BackgroundMessage.js';
+import { DataNotFoundException } from '../../Exceptions/DataNotFoundException.js';
 
 export class ActivateAutoReplyUseCase{
 
-	handle(formId){
+	/**
+	 * 
+	 * @param {string} formId 
+	 * @return {Promise} 
+	 */
+	async handle(formId){
 	
 		const repository = new BrowserLocalStorageAutoReplySettingRepository();
 		try{
-			const autoReplySetting = repository.findByFormId(formId);
+			const autoReplySetting = await repository.findByFormId(formId);
 			autoReplySetting.activate();
-			repository.save(autoReplySetting);
+			await repository.save(autoReplySetting);
 			return autoReplySetting.getAsObject();
 		}catch(e){
-			const firstTimeData = {status: true};
-			
-			new ApiRequestMessage('form','getForm')
-			.send({formId: formId})
-			.then(form => {form.items})
-			.catch(e => {throw e});
-			
-			new ApiRequestMessage('gmail','getAliases').send()
-			.then(res => firstTimeData.aliases = res.sendAs)
-			.catch(e => {throw e});
-			
-			return firstTimeData;
+			console.log(typeof e);
+			console.log(e);
+			if(e instanceof DataNotFoundException){
+
+				console.log('データが保存されていないエラーです');
+				const firstTimeData = {status: true};
+				
+				const formPromise = new BackgroundMessage('ApiRequest', 'form', 'getForm')
+				.send({formId: formId})
+				.catch(e => {throw e});
+
+				const aliasesPromise = new BackgroundMessage('ApiRequest', 'gmail', 'getAliases')
+				.send()
+				.catch(e => {throw e});
+				const [form, aliases] = await Promise.all([formPromise, aliasesPromise]);
+
+				firstTimeData.insertContents = form.items;
+				firstTimeData.aliases = aliases.sendAs;
+
+				return firstTimeData;
+			}
 		}
 		
 	}
