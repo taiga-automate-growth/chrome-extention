@@ -19,11 +19,19 @@ export class GmailApiClient extends GoogleApiClient{
     /** 
      * @return {Promise}
      */
-    getAliases(){
-        this.parameter.method = 'GET';
+    async getAliases(){
+        console.log('GmailAPIのエイリアスにGETリクエストを送ります');
+        await this.getAuthToken();
         return new Promise((resolve,reject) =>{
 
-            fetch(`${this.#baseUrl}/v1/users/me/settings/sendAs?key=${this.#apiKey}`,this.parameters)
+            fetch(`${this.#baseUrl}/v1/users/me/settings/sendAs?key=${this.#apiKey}`,{
+                method: 'GET',
+                headers: {
+                    Authorization:'Bearer ' + this.token,
+                    'Content-Type':'application/json'
+                },
+                'contentType': 'json'
+            })
             .then(response => response.json())
             .then(ailiases => resolve(ailiases))
             .catch(error => reject(error));
