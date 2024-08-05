@@ -626,7 +626,7 @@ export class AutoReplySettingView{
 				this.#insertContents.removeChild(this.#insertContents.firstChild)
 			}
 
-			for(let ailias of datas.ailias){
+			for(let ailias of datas.aliases){
 
 				const ailiasContainer = this.#createElement('div' , 'ailias' , {
 					style:'display:flex; align-items:center;'
@@ -643,7 +643,7 @@ export class AutoReplySettingView{
 
 				ailiasContainer.appendChild(radioButton);
 
-				const label = createElement('label' , '' , {
+				const label = this.#createElement('label' , '' , {
 					for:`ailias-address-${ailias.sendAsEmail}`,
 					style: 'font-size:0.75rem;'
 				},ailias.sendAsEmail);
