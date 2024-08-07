@@ -34,8 +34,9 @@ export class ActivateAutoReplyUseCase{
 				.catch(e => {throw e});
 				const [form, aliases] = await Promise.all([formPromise, aliasesPromise]);
 
-				firstTimeData.insertContents = form.items;
-				firstTimeData.aliases = aliases.sendAs;
+				firstTimeData.insertContents = form.items.map(item => {return item.title});
+
+				firstTimeData.aliases = aliases.sendAs.map(alias => {return alias.sendAsEmail});
 
 				return firstTimeData;
 			}
