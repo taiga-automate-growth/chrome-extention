@@ -515,7 +515,7 @@ export class AutoReplySettingView{
 	
 	/**
 	 * @param {activateCallback} activateCallback
-	 * @param {deactiavteCallback} deactivateCallback
+	 * @param {deactivateCallback} deactivateCallback
 	 * @param {createScriptCallback} createScriptCallback
 	 * @param {updateInsertContentsCallback} updateInsertContentsCallback
 	 * @param {updateAliasesCallback} updateAliasesCallback
@@ -534,19 +534,22 @@ export class AutoReplySettingView{
 		const formId = this.getFormId();
 		
 		// 自動返信トグルのクリックイベントにリスナーを追加
-		this.#status.addEventListener('click', function(){
-			const activation = this.getAttribute('aria-checked');
-			
+		this.#status.addEventListener('click', (e) => {
+			const activation = e.currentTarget.getAttribute('aria-checked');
+
 			if(activation === 'true'){
 				deactivateCallback(formId);
+				this.deactivate();
 			}else{
 				activateCallback(formId);
+				this.activate();
 			}
 		});
 		
 		// スクリプト作成ボタンのクリックイベントにリスナーを追加
-		this.#createScriptButton.addEventListener('click', function(){
-			createScriptCallback(this.getInputData(),formId);
+		this.#createScriptButton.addEventListener('click', () => {
+			console.log(this.getInputData());
+			createScriptCallback(formId,this.getInputData());
 		});
 		
 		// 差し込みコンテンツ更新ボタンのクリックイベントにリスナーを追加
@@ -626,29 +629,30 @@ export class AutoReplySettingView{
 				this.#insertContents.removeChild(this.#insertContents.firstChild)
 			}
 
-			for(let ailias of datas.aliases){
+			for(let alias of datas.aliases){
 
-				const ailiasContainer = this.#createElement('div' , 'ailias' , {
+				const aliasContainer = this.#createElement('div' , 'alias' , {
 					style:'display:flex; align-items:center;'
 				});
 
-				this.#fromAddress.appendChild(ailiasContainer);            
+				this.#fromAddress.appendChild(aliasContainer);            
 
 				const radioButton = this.#createElement('input' , '' , {
 					type:'radio',
 					name:'auto-reply-select-fromAddress',
-					id:`ailias-address-${ailias.sendAsEmail}`,
-					value: ailias.sendAsEmail
+					id:`alias-address-${alias}`,
+					value: alias
 				});
 
-				ailiasContainer.appendChild(radioButton);
+				aliasContainer.appendChild(radioButton);
 
 				const label = this.#createElement('label' , '' , {
-					for:`ailias-address-${ailias.sendAsEmail}`,
+					for:`alias-address-${alias}`,
 					style: 'font-size:0.75rem;'
-				},ailias.sendAsEmail);
+				},alias);
 
-				ailiasContainer.appendChild(label);
+				aliasContainer.appendChild(label);
+				if('fromAddress' in datas && alias === datas.fromAddress) radioButton.checked = true;
 			}
 			
 		}
@@ -674,10 +678,9 @@ export class AutoReplySettingView{
 			for(let question of datas.insertContents){
 		
 				// 質問タイトルをpタグで入れる
-				const title = question.title;
 				const insertContent = this.#createElement('p' , 'insert-content' , {
 					style: 'font-size:0.75rem; margin-block-start:0; margin-block-end:0; cursor:pointer; border-bottom:0.5px solid gainsboro'
-				} , `{{${title}}}`);
+				} , `{{${question}}}`);
 				this.#insertContents.appendChild(insertContent);
 				insertContent.addEventListener('click', this.#insert.bind(this));
 			}
@@ -686,6 +689,7 @@ export class AutoReplySettingView{
 	
 	activate(){
 		const forms = document.getElementsByClassName('auto-reply-form');
+		console.log(forms);
 		for(let form of forms){
             form.disabled = false;
         }
@@ -711,6 +715,12 @@ export class AutoReplySettingView{
 	
 	/** @return {object} */
 	getInputData(){
+		const collectMailAddressConfigContainer = document.getElementsByClassName('uZH9Ac')[0];
+		console.log(collectMailAddressConfigContainer);
+		const collectMailAddressConfigListBox = collectMailAddressConfigContainer.children[1];
+		console.log(collectMailAddressConfigListBox);
+		const getMailConfig = collectMailAddressConfigListBox.getElementsByClassName('MocG8c HZ3kWc  LMgvRb KKjvXb')[0];
+		
 		let fromAddress;
 		
 		let aliases = document.getElementsByClassName('alias');
@@ -723,11 +733,15 @@ export class AutoReplySettingView{
 		const insertContents = Array.prototype.map.call(
 			document.getElementsByClassName('insert-content'),
 			insertContent => {
-				return insertContent.value.replace(/[{}]/g,'');
+				console.log(insertContent);
+				return insertContent.innerText.replace(/[{}]/g,'');
 			}
 		);
         
 		return {
+			formId: this.getFormId(),
+			status: this.#status.getAttribute('aria-checked'),
+			emailAddressCollectionType: getMailConfig.innerText,
 			subject: this.#subject.value,
 			body: this.#body.value,
 			fromAddress: fromAddress,
@@ -751,7 +765,7 @@ export class AutoReplySettingView{
 
         // 差し込みコンテンツと送信元アドレスのフォームを無効にする
         this.#insertContents.style.border = '1px solid gainsboro';
-        this.fromAddress.style.border = '1px solid gainsboro';
+        this.#fromAddress.style.border = '1px solid gainsboro';
 
         const insertContents = document.getElementsByClassName('insert-content');
         for(let insertContent of insertContents){
@@ -819,5 +833,9 @@ export class AutoReplySettingView{
 	
 	        aliasContainer.appendChild(label);
 	    }
-	}	
+	}
+
+	error(message){
+		window.alert(message);
+	}
 }
