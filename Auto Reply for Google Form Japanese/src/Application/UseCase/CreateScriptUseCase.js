@@ -1,34 +1,34 @@
-import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
-import {ApiRequestMessage} from '../../Infrastracture/Api/Request/ApiRequestMessage.js';
-import {AutoReplySetting} from '../../Domain/Models/AutoReplySetting.js';
+import { BrowserLocalStorageAutoReplySettingRepository } from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
+import { AutoReplySetting } from '../../Domain/Models/AutoReplySetting.js';
+import { DataNotFoundException } from '../../Exceptions/DataNotFoundException.js';
+import { EmailNotCollectException } from '../../Exceptions/EmailNotCollectException.js';
+import { RequiredEmptyException } from '../../Exceptions/RequiredEmptyException.js';
+import { BackgroundMessage } from '../../Infrastracture/background/BackgroundMessage.js';
 
 export class CreateScriptUseCase{
 	/**
 	 * @param {string} formId フォームID
 	 * @param {Object} inputData フォームに入力されたデータ
-	 * @return {string} 生成したGASのスクリプトID
+	 * @return {Promise}
 	 */
-	handle(formId,inputData){
-	
+	async handle(formId,inputData){
+        console.log(inputData);
 		let autoReplySetting;
 		const repository = new BrowserLocalStorageAutoReplySettingRepository();
 		
 		try{
 		
-			autoReplySetting = repository.findByFormId(formId);
+			autoReplySetting = await repository.findByFormId(formId);
 			autoReplySetting.update(inputData)
-			repository.save(autoReplySetting);
-	  
         }catch(e){
-        
-	        autoReplySetting = new AutoReplySetting(inputData);
-        
+            if(e instanceof DataNotFoundException){
+	            autoReplySetting = new AutoReplySetting(inputData);
+            }
         }
+        console.log(autoReplySetting);
         
-        repository.save(autoReplySetting);
-        
-        if(autoReplySetting.isCollectEmail() === '収集しない'){
-	        throw new NotCollectionEmailException();
+        if(!autoReplySetting.isCollectEmail()){
+	        throw new EmailNotCollectException();
         }
         
         if(autoReplySetting.isRequiredEmpty()){
@@ -36,16 +36,15 @@ export class CreateScriptUseCase{
         }
         
         if(!autoReplySetting.hasScript()){
-	        
-	        new ApiRequestMessage('Apps Script','createScript')
-	        .send({title: '自動返信設定', parentId: autoReplySetting.getFormId()})
-	        .then(res => {
-		        autoReplySetting.setScriptId(res.scriptId)
-		        repository.save(autoReplySetting);
-	        })
-	        .catch(e => {throw new ApiRequestFailedException()});
+            try {
+                const res = await new BackgroundMessage('ApiRequest', 'Apps Script', 'createScript')
+                .send({ title: '自動返信設定', parentId: autoReplySetting.getFormId() });
+                autoReplySetting.setScriptId(res.scriptId);
+            } catch (e) {
+                throw e;
+            }
         }
-        
+
         const manifestFile = {
             name: 'appsscript',
             type: 'JSON',
@@ -61,38 +60,34 @@ export class CreateScriptUseCase{
                 ]
             })
         }
+
+        
+        await repository.save(autoReplySetting);
         
         const scriptFile = {
             name: 'main',
             type: 'SERVER_JS',
             source:`function autoReply(e) {
                 
-                // 回答オブジェクトを質問ごとに配列で取得
                 const responses = e.response.getItemResponses();
                 let subject = '${autoReplySetting.getSubject()}';
                 let body = '${autoReplySetting.getBody().replace(/\n/g, '\\n')}';
                 
-                // 回答オブジェクトを一つずつループ
                 for (const response of responses){
-                    // 回答内容を取得
                     const answer = response.getResponse();
 
-                    // 質問文を取得
                     const question = '{{' + response.getItem().getTitle() + '}}';
 
                     body = body.split(question).join(answer);
                     subject = subject.split(question).join(answer);
                     
                 }
-                // すべての回答を取得
 
                 const recipient = e.response.getRespondentEmail();
 
-                // オプション
-                // const option = '${autoReplySetting.getMailOption()}';
+                const option = '${autoReplySetting.getMailOption()}';
 
-                GmailApp.sendEmail(recipient, subject, body);
-                // メールの送信を実行する
+                GmailApp.sendEmail(recipient, subject, body, option);
             }`,
             functionSet: {
                 values: [
@@ -103,9 +98,12 @@ export class CreateScriptUseCase{
             ]}
         }
         
-        new ApiRequestMessage('Apps Script','updateScript')
-        .send({scriptId: autoReplySetting, files: [manifestFile, scriptFile]})
-        .then(res => {return res.scriptId})
-        .catch(e => {throw e});
+        return new Promise((resolve,reject) => {
+
+            new BackgroundMessage('ApiRequest', 'Apps Script','updateScript')
+            .send({scriptId: autoReplySetting.getScriptId(), files: [manifestFile, scriptFile]})
+            .then(res =>  resolve(res.scriptId))
+            .catch(e => reject(e));
+        });
 	}
 }
