@@ -9,14 +9,15 @@ export class ExternalDataSource{
     #action;
 
     /** @type {object} */
-    #data;
+    #params;
+
      /**
      * @constructor
      */
      constructor(message){
         this.#dataSource = message.resource;
         this.#action = message.action;
-        this.#data = message.params ?? {};
+        this.#params = message.params ?? {};
     }
 
     #generateDataSource(dataSource){
@@ -46,7 +47,7 @@ export class ExternalDataSource{
 
         }else if(this.#action === 'saveAutoReplySetting'){
             return new Promise((resolve,reject) => {
-                dataSource.save(this.#data)
+                dataSource.save(this.#params.data)
                 .then(result => {resolve(result)})
                 .catch(error => reject(error));
             });
