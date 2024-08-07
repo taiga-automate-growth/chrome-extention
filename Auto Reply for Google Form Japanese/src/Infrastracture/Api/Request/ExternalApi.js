@@ -90,7 +90,7 @@ export class ExternalApi{
 
             console.log('スクリプトを作ります');
             return new Promise((resolve,reject) =>{
-                apiClient.createScript(this.#params.title, this.#params.scriptId)
+                apiClient.createScript(this.#params.title, this.#params.parentId)
                 .then(project => resolve(project))
                 .catch(error => reject(error));
             });
