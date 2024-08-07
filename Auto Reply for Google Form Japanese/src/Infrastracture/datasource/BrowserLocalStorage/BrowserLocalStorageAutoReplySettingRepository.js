@@ -7,13 +7,14 @@ export class BrowserLocalStorageAutoReplySettingRepository{
     /**
      * 復元
      * 
-     * @param {string} googleFormId GoogleフォームのID
+     * @param {string} formId GoogleフォームのID
      * @return {Promise} 自動返信設定インスタンス 
      */
-    async findByFormId(googleFormId){
+    async findByFormId(formId){
+        console.log(formId);
         const allDatas = await new BackgroundMessage('dataSourceAccess', 'BrowserLocalStorage', 'getAutoReplySetting')
         .send()
-        const settingData = allDatas["auto-reply-google-form-for-japanese"][googleFormId];
+        const settingData = allDatas["auto-reply-google-form-for-japanese"][formId];
         console.log(settingData);
 
         if(settingData === undefined || settingData === null || Object.keys(settingData).length === 0) {
@@ -38,6 +39,7 @@ export class BrowserLocalStorageAutoReplySettingRepository{
         new BackgroundMessage('dataSourceAccess', 'BrowserLocalStorage', 'getAutoReplySetting')
         .send()
         .then(allDatas => {
+            delete allDatas['auto-reply-google-form-for-japanese']['auto-reply-google-form-for-japanese'];
             allDatas['auto-reply-google-form-for-japanese'][formId] = saveData;
             new BackgroundMessage('dataSourceAccess', 'BrowserLocalStorage', 'saveAutoReplySetting')
             .send({data: allDatas})
