@@ -198,11 +198,6 @@ export class AutoReplySettingView{
 		toggleButtonInner3.appendChild(toggleButtonInner4);
 		
 		this.#status = toggleButton;
-		toggleButton.addEventListener('click',(e) => {
-			const active = e.currentTarget.getAttribute('aria-checked');
-			if(active === 'false') this.activate.bind(this);
-			if(active === 'true') this.deactivate.bind(this);
-		});
 		
 		// 自動返信専用フォームのコンテナ
 		const replyFormContainer = this.#createElement('div' , '' , {});
@@ -514,13 +509,15 @@ export class AutoReplySettingView{
 	}
 	
 	/**
+	 * @param {Boolean} status - 有効化状態
 	 * @param {activateCallback} activateCallback
 	 * @param {deactivateCallback} deactivateCallback
 	 * @param {createScriptCallback} createScriptCallback
 	 * @param {updateInsertContentsCallback} updateInsertContentsCallback
 	 * @param {updateAliasesCallback} updateAliasesCallback
 	 */
-	view(
+	insert(
+		status,
 		activateCallback, 
 		deactivateCallback, 
 		createScriptCallback, 
@@ -532,11 +529,13 @@ export class AutoReplySettingView{
 		const parent = document.getElementsByClassName('aDRHlc')[0];
 		
 		const formId = this.getFormId();
+
+		if(status) this.#status.classList.add('N2RpBe');
 		
 		// 自動返信トグルのクリックイベントにリスナーを追加
 		this.#status.addEventListener('click', (e) => {
 			const activation = e.currentTarget.getAttribute('aria-checked');
-
+			console.log(activation);
 			if(activation === 'true'){
 				deactivateCallback(formId);
 				this.deactivate();
@@ -625,8 +624,8 @@ export class AutoReplySettingView{
 		}
 		
 		if('aliases' in datas && datas.aliases !== ""){
-			while(this.#insertContents.hasChildNodes()){
-				this.#insertContents.removeChild(this.#insertContents.firstChild)
+			while(this.#fromAddress.hasChildNodes()){
+				this.#fromAddress.removeChild(this.#fromAddress.firstChild)
 			}
 
 			for(let alias of datas.aliases){
