@@ -39,7 +39,7 @@ export class AutoReplySetting{
     constructor(settingDatas){
         this.#formId = settingDatas.formId ?? "";
         this.#scriptId = settingDatas.scriptId ?? "";
-        this.#emailAddressCollectionType = settingDatas.emailAddressCollectionSetting ?? "";
+        this.#emailAddressCollectionType = settingDatas.emailAddressCollectionType ?? "";
         this.#status = settingDatas.status ?? "";
         this.#subject = settingDatas.subject ?? "";
         this.#body = settingDatas.body ?? "";
@@ -60,7 +60,7 @@ export class AutoReplySetting{
     		formId:this.#formId,
     		scriptId:this.#scriptId,
  		    emailAddressCollectionType: this.#emailAddressCollectionType,
-    		activationStatus: this.#status,
+    		status: this.#status,
 		    subject: this.#subject,
 		    body: this.#body,
 		    fromAddress: this.#fromAddress,
@@ -127,7 +127,7 @@ export class AutoReplySetting{
 	 * @return {Boolean}
 	 */
 	hasScript(){
-		if(this.#scriptId !== undefined || this.#scriptId !== '') return true;
+		if(this.#scriptId !== undefined && this.#scriptId !== '') return true;
 		return false;
 	}
 	
