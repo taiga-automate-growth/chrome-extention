@@ -39,6 +39,7 @@ export class GoogleApiClient{
      * @return {Promise}
      */
     getAuthToken(){
+        if(this.token !== undefined) return;
         return new Promise((resolve,reject) => {
             chrome.identity.getAuthToken({interactive:true})
             .then(authTokenResult => {
