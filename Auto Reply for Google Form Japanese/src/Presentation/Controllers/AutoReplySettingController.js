@@ -4,6 +4,8 @@ import {CreateScriptUseCase} from '../../Application/UseCase/CreateScriptUseCase
 import {DeactivateAutoReplyUseCase} from '../../Application/UseCase/DeactivateAutoReplyUseCase.js';
 import {UpdateInsertContentsUseCase} from '../../Application/UseCase/UpdateInsertContentsUseCase.js';
 import {UpdateAliasesUseCase} from '../../Application/UseCase/UpdateAliasesUseCase.js';
+import { EmailNotCollectException } from '../../Exceptions/EmailNotCollectException.js';
+import { RequiredEmptyException } from '../../Exceptions/RequiredEmptyException.js';
 
 export class AutoReplySettingController{
 	
@@ -17,11 +19,6 @@ export class AutoReplySettingController{
 	constructor(view){
 		this.#view = view;
 	}
-	
-	#exceptionHandle(e){
-	
-	}
-	
 	
 	async index(){
 		const formId = this.#view.getFormId();
@@ -37,6 +34,12 @@ export class AutoReplySettingController{
 				this.updateInsertContents.bind(this),
 				this.updateAliases.bind(this)
 			);
+
+			if(settingData.status === 'true'){
+				this.#view.activate();
+			}else{
+				this.#view.deactivate();
+			}
 			
 		}catch(e){
 			console.error(e.toString());
@@ -49,13 +52,17 @@ export class AutoReplySettingController{
 		this.#view.activate();
 	}
 	
-	createScript(inputData,formId){
-		const scriptId = new CreateScriptUseCase().handle(inputData,formId);
-		this.#view.createScriptDone(scriptId);
+	async createScript(formId,inputData){
+		try {
+			const scriptId = await new CreateScriptUseCase().handle(formId,inputData);
+			this.#view.createScriptDone(scriptId);
+		} catch (error) {
+			this.#errorHandle(error);
+		}
 	}
 	
-	deactivate(formId){
-		new DeactivateAutoReplyUseCase().handle(formId);
+	async deactivate(formId){
+		await new DeactivateAutoReplyUseCase().handle(formId);
 		this.#view.deactivate();
 	}
 	
@@ -67,6 +74,23 @@ export class AutoReplySettingController{
 	updateAliases(formId){
 		const aliases = new UpdateAliasesUseCase().handle(formId);
 		this.#view.updateAliases(aliases);
+	}
+
+	/**
+	 * 
+	 * @param {Error} error エラーオブジェクト 
+	 */
+	#errorHandle(error){
+		let errorMessage;
+
+		if(error instanceof EmailNotCollectException) {
+			errorMessage = 'メールアドレスの収集設定が「収集しない」になっているためエラーが発生しました\n「回答者からの入力」もしくは「確認済み」に変更してください';
+		
+		}else if(error instanceof RequiredEmptyException){
+			errorMessage = '必須項目の入力がされていないためエラーが発生しました\n件名、本文、送信元アドレスは必須です';
+		}
+
+		this.#view.error(errorMessage);
 	}
 
 }
