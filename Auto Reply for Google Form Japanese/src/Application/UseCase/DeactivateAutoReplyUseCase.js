@@ -1,18 +1,20 @@
 import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
 import {ApiRequestMessage} from '../../Infrastracture/Api/Request/ApiRequestMessage.js';
+import { BackgroundMessage } from '../../Infrastracture/background/BackgroundMessage.js';
 
 export class DeactivateAutoReplyUseCase{
 
-	handle(formId){
+	async handle(formId){
 		const repository = new BrowserLocalStorageAutoReplySettingRepository();
 		try{
-			const autoReplySetting = repository.findByFormId(formId);
+			const autoReplySetting =  await repository.findByFormId(formId);
 			autoReplySetting.deactivate();
-			repository.save(autoReplySetting);
+			await repository.save(autoReplySetting);
 			
 			if(!autoReplySetting.hasScript()){
-				throw new NotFoundScriptException();
+				return;
 			}
+
 			const manifestFile = {
 	            name: 'appsscript',
 	            type: 'JSON',
@@ -29,7 +31,7 @@ export class DeactivateAutoReplyUseCase{
 	            })
 	        }
 			
-			new ApiRequestMessage('Apps Script', 'updateScript')
+			new BackgroundMessage('ApiRequest', 'Apps Script', 'updateScript')
 			.send({scriptId: autoReplySetting.getScriptId(), files: [manifestFile]})
 			.then(res => {})
 			.catch(e => {throw e});
