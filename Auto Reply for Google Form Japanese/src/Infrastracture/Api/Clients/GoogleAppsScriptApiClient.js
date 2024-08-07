@@ -13,6 +13,7 @@ export class GoogleAppsScriptApiClient extends GoogleApiClient{
 	 * 
 	 */
 	constructor(){
+		super();
 		this.#baseUrl = 'https://script.googleapis.com';
 		this.#apiKey = 'AIzaSyANMKrOrF6hDYmQywMfYKcL9YU15Sx0WL8';
 	}
@@ -22,15 +23,21 @@ export class GoogleAppsScriptApiClient extends GoogleApiClient{
 	 * @param {string} parentId スクリプトを紐づけるGoogleサービスのID
 	 * @return {Promise}
 	 */
-	createScript(title, parentId){
-		this.parameters.method = 'POST';
-		const body = {
-			title: title,
-			parentId: parentId
-		}
-		this.parameters.body = JSON.stringfy(body);
+	async createScript(title, parentId){
+		await this.getAuthToken();
 		return new Promise((resolve,reject) => {
-			fetch(`${this.#baseUrl}/v1/projects?key=${this.#apiKey}`, this.parameters)
+			fetch(`${this.#baseUrl}/v1/projects?key=${this.#apiKey}`, {
+				method: 'POST',
+				headers: {
+                    Authorization:'Bearer ' + this.token,
+                    'Content-Type':'application/json'
+                },
+                'contentType': 'json',
+				body:JSON.stringify({
+					title: title,
+					parentId: parentId
+				})
+			})
 			.then(response => response.json())
 			.then(project => resolve(project))
 			.catch(error => reject(error));
@@ -42,12 +49,20 @@ export class GoogleAppsScriptApiClient extends GoogleApiClient{
 	 * @param {Array<Object>} files GASのスクリプトファイル
 	 * @return {Promise}
 	 */
-	updateScript(scriptId, files){
-		this.parameters.method = 'POST';
-		this.parameters.body = {files: JSON.stringfy(files)};
-
+	async updateScript(scriptId, files){
+		await this.getAuthToken();
 		return new Promise((resolve,reject) => {
-			fetch(`${this.#baseUrl}/v1/projects/${scriptId}/content?key=${this.#apiKey}`, this.parameters)
+			fetch(`${this.#baseUrl}/v1/projects/${scriptId}/content?key=${this.#apiKey}`, {
+				method: 'PUT',
+				headers: {
+                    Authorization:'Bearer ' + this.token,
+                    'Content-Type':'application/json'
+                },
+                'contentType': 'json',
+				body: JSON.stringify({
+					files: files
+				})
+			})
 			.then(response => response.json())
 			.then(project => resolve(project))
 			.catch(error => reject(error));
