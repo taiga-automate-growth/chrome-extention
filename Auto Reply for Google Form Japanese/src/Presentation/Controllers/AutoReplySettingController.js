@@ -27,7 +27,9 @@ export class AutoReplySettingController{
 		try{
 		
 			this.#view.update(settingData);
-			this.#view.view(
+
+			this.#view.insert(
+				settingData.status,
 				this.activate.bind(this),
 				this.deactivate.bind(this),
 				this.createScript.bind(this),
@@ -35,7 +37,7 @@ export class AutoReplySettingController{
 				this.updateAliases.bind(this)
 			);
 
-			if(settingData.status === 'true'){
+			if(settingData.status){
 				this.#view.activate();
 			}else{
 				this.#view.deactivate();
