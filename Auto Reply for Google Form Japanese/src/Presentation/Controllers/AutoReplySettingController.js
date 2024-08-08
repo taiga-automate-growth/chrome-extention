@@ -68,9 +68,9 @@ export class AutoReplySettingController{
 		this.#view.deactivate();
 	}
 	
-	updateInsertContents(formId){
-		const insertContents = new UpdateInsertContentsUseCase().handle(formId);
-		this.#view.updateInsertContents(insertContents);
+	async updateInsertContents(formId){
+		const insertContents = await new UpdateInsertContentsUseCase().handle(formId);
+		this.#view.update(insertContents);
 	}
 	
 	async updateAliases(formId){
