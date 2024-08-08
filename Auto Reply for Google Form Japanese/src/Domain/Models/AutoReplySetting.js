@@ -170,4 +170,22 @@ export class AutoReplySetting{
 	setScriptId(scriptId){
 		this.#scriptId = scriptId;
 	}
+
+	/**
+	 * @param {Object} inputData
+	 */
+	update(inputData){
+		this.#formId = inputData.formId ?? "";
+        this.#scriptId = inputData.scriptId ?? "";
+        this.#emailAddressCollectionType = inputData.emailAddressCollectionType ?? "";
+        this.#status = inputData.status ?? "";
+        this.#subject = inputData.subject ?? "";
+        this.#body = inputData.body ?? "";
+        this.#fromAddress = inputData.fromAddress ?? "";
+        this.#fromName = inputData.fromName ?? "";
+        this.#cc = inputData.cc ?? "";
+        this.#bcc = inputData.bcc ?? "";
+        this.#insertContents = inputData.insertContents ?? "";
+        this.#aliases = inputData.aliases ?? "";
+	}
 }
