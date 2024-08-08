@@ -569,7 +569,8 @@ export class AutoReplySettingView{
 		// 自動返信設定フォームを追加
 		parent.appendChild(this.#allitems);
 
-		document.body.appendChild(this.#loading.element);
+		const loadingParent = document.getElementsByClassName('KP7TGc RjsPE')[0];
+		loadingParent.appendChild(this.#loading.element);
 	
 	}
 	
@@ -786,6 +787,18 @@ export class AutoReplySettingView{
             const label = alias.children[1];
             label.style.color = 'darkgray';
         }
+	}
+
+	/**
+	 * 
+	 * @param {string} message 
+	 */
+	loadStart(message){
+		this.#loading.start(message);
+	}
+
+	loadEnd(){
+		this.#loading.end();
 	}
 	
 }
