@@ -73,9 +73,9 @@ export class AutoReplySettingController{
 		this.#view.updateInsertContents(insertContents);
 	}
 	
-	updateAliases(formId){
-		const aliases = new UpdateAliasesUseCase().handle(formId);
-		this.#view.updateAliases(aliases);
+	async updateAliases(formId){
+		const aliases = await new UpdateAliasesUseCase().handle(formId);
+		this.#view.update(aliases);
 	}
 
 	/**
