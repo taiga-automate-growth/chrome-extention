@@ -15,16 +15,16 @@ export class CreateScriptUseCase{
         console.log(inputData);
 		let autoReplySetting;
 		const repository = new BrowserLocalStorageAutoReplySettingRepository();
-		
-		try{
-		
-			autoReplySetting = await repository.findByFormId(formId);
-			autoReplySetting.update(inputData)
-        }catch(e){
-            if(e instanceof DataNotFoundException){
-	            autoReplySetting = new AutoReplySetting(inputData);
+        try {
+            autoReplySetting = await repository.findByFormId(formId);
+            autoReplySetting.update(inputData);
+        } catch (error) {
+            if(error instanceof DataNotFoundException){
+
+                autoReplySetting = new AutoReplySetting(inputData);
             }
         }
+
         console.log(autoReplySetting);
         
         if(!autoReplySetting.isCollectEmail()){
@@ -44,6 +44,7 @@ export class CreateScriptUseCase{
                 throw e;
             }
         }
+        await repository.save(autoReplySetting);
 
         const manifestFile = {
             name: 'appsscript',
@@ -60,9 +61,6 @@ export class CreateScriptUseCase{
                 ]
             })
         }
-
-        
-        await repository.save(autoReplySetting);
         
         const scriptFile = {
             name: 'main',
@@ -85,7 +83,7 @@ export class CreateScriptUseCase{
 
                 const recipient = e.response.getRespondentEmail();
 
-                const option = '${autoReplySetting.getMailOption()}';
+                const option = JSON.parse(${JSON.stringify(autoReplySetting.getMailOption())});
 
                 GmailApp.sendEmail(recipient, subject, body, option);
             }`,
