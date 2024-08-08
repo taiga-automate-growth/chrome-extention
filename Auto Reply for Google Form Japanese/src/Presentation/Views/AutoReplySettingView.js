@@ -1,3 +1,5 @@
+import { Loading } from "./Components/Loading.js";
+
 export class AutoReplySettingView{
 
 	/** @type {HTMLElement} */
@@ -38,7 +40,10 @@ export class AutoReplySettingView{
 	
 	/** @type {HTMLElement} */
 	#insertTarget;
-	
+
+	/** @type {Loading} */
+	#loading;
+
 	/** @constructor */
 	constructor(){
 	
@@ -477,7 +482,7 @@ export class AutoReplySettingView{
 		buttonContainer.appendChild(createScriptButton);
 		this.#createScriptButton = createScriptButton;
 		
-
+		this.#loading = new Loading();
 	}
 	
 	#createElement(tag, className, attributes, innerHTML) {
@@ -563,6 +568,8 @@ export class AutoReplySettingView{
 		
 		// 自動返信設定フォームを追加
 		parent.appendChild(this.#allitems);
+
+		document.body.appendChild(this.#loading.element);
 	
 	}
 	
@@ -752,8 +759,9 @@ export class AutoReplySettingView{
 		}
 	}
 	
-	createScriptDone(){
-	
+	createScriptDone(scriptId){
+		window.alert('プログラムを自動で生成しました。\nトリガーの設定が必要です。設定画面に移動してもよろしいですか？')
+		window.open(`https://script.google.com/u/0/home/projects/${scriptId}/triggers`, '_blank');
 	}
 	
 	deactivate(){
