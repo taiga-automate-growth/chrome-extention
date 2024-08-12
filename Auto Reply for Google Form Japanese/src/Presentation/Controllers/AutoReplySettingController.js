@@ -52,7 +52,7 @@ export class AutoReplySettingController{
 	}
 	
 	async activate(formId){
-		this.loadStart('自動返信を有効にしています...')
+		this.#view.loadStart('自動返信を有効にしています...')
 		const activationData = await new ActivateAutoReplyUseCase().handle(formId);
 		this.#view.update(activationData);
 		this.#view.activate();
@@ -60,7 +60,7 @@ export class AutoReplySettingController{
 	}
 	
 	async createScript(formId,inputData){
-		this.loadStart('プログラムを生成しています...')
+		this.#view.loadStart('プログラムを生成しています...')
 		try {
 			const scriptId = await new CreateScriptUseCase().handle(formId,inputData);
 			this.#view.createScriptDone(scriptId);
