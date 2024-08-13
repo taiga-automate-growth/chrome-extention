@@ -27,5 +27,8 @@ export class EmailBodyComponent extends AutoReplySettingComponent{
 		this.element.appendChild(this.form);
     }
 
+	addRecordInsertTargetFunction(callback){
+		this.form.addEventListener('click', e => callback(e))
+	}
 
 }
