@@ -115,7 +115,7 @@ export class AutoReplySettingView{
 	}
 	
 	#insert(e){
-		const active = this.#status.getAttribute('aria-checked');
+		const active = this.#status.getValue();
 	    if(active === "false" || this.#insertTarget === undefined) return;
 	    const insertText = e.currentTarget.innerText;
 	    this.#insertTarget.focus();
@@ -147,6 +147,9 @@ export class AutoReplySettingView{
 		const formId = this.getFormId();
 
 		if(status) this.#status.activate();
+
+		this.#subject.addRecordInsertTargetFunction(this.#recordInsertTarget.bind(this));
+		this.#body.addRecordInsertTargetFunction(this.#recordInsertTarget.bind(this));
 		
 		// 自動返信トグルのクリックイベントにリスナーを追加
 		this.#status.getToggleButton().addEventListener('click', (e) => {
@@ -289,36 +292,19 @@ export class AutoReplySettingView{
 		console.log(collectMailAddressConfigContainer);
 		const collectMailAddressConfigListBox = collectMailAddressConfigContainer.children[1];
 		const collectMailConfig = collectMailAddressConfigListBox.getElementsByClassName('MocG8c HZ3kWc  LMgvRb KKjvXb')[0];
-		
-		let fromAddress;
-		
-		let aliases = document.getElementsByClassName('alias');
-		aliases = Array.prototype.map.call(aliases,alias => {
-			const radio = alias.children[0];
-            if(radio.checked) fromAddress = radio.value;
-            return radio.value;
-		});
-		
-		const insertContents = Array.prototype.map.call(
-			document.getElementsByClassName('insert-content'),
-			insertContent => {
-				console.log(insertContent);
-				return insertContent.innerText.replace(/[{}]/g,'');
-			}
-		);
         
 		return {
 			formId: this.getFormId(),
-			status: this.#status.getAttribute('aria-checked'),
+			status: this.#status.getValue(),
 			emailAddressCollectionType: collectMailConfig.innerText,
-			subject: this.#subject.value,
-			body: this.#body.value,
-			fromAddress: fromAddress,
-			fromName: this.#fromName.value,
-			cc: this.#cc.value,
-			bcc: this.#bcc.value,
-			insertContents: insertContents,
-			aliases : aliases
+			subject: this.#subject.getValue(),
+			body: this.#body.getValue(),
+			fromAddress: this.#fromAddress.getValue(),
+			fromName: this.#fromName.getValue(),
+			cc: this.#cc.getValue(),
+			bcc: this.#bcc.getValue(),
+			insertContents: this.#insertContents.getValue(),
+			aliases : this.#fromAddress.getAliases()
 		}
 	}
 	
