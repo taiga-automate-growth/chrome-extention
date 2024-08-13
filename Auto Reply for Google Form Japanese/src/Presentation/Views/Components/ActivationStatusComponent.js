@@ -66,4 +66,8 @@ export class ActivationStatusComponent extends HtmlComponent{
 	setValue(statusValue){
 		this.#toggleButton.setAttribute('aria-checked',statusValue);
 	}
+
+	getValue(){
+		return this.#toggleButton.getAttribute('aria-labal');
+	}
 }

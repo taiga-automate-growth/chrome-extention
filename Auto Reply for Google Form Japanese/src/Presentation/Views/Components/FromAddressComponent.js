@@ -101,6 +101,24 @@ export class FromAddressComponent extends AutoReplySettingComponent{
 
 	}
 
+	/**
+	 * 
+	 * @return {string}
+	 */
+	getValue(){
+		return this.#aliases.reduce((fromAddress,alias) => {
+			radioButton = alias.children[0];
+			if(radioButton.checked) fromAddress = radioButton.value;
+			return fromAddress
+		},"");
+	}
+
+	getAliases(){
+		return this.#aliases.map(alias => {
+			return alias.children[0].value;
+		});
+	}
+
 	activate(){
 		this.form.style.border = '1px solid black';
 		if(this.#aliases.length === 0) return;
@@ -111,6 +129,7 @@ export class FromAddressComponent extends AutoReplySettingComponent{
             label.style.color = 'black';
         }
 	}
+
 	deactivate(){
 		this.form.style.border = '1px solid gainsboro';
 		if(this.#aliases.length === 0) return;
@@ -120,6 +139,5 @@ export class FromAddressComponent extends AutoReplySettingComponent{
             const label = alias.children[1];
             label.style.color = 'darkgray';
         }
-
 	}
 }

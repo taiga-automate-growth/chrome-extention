@@ -35,7 +35,7 @@ export class InsertContentsComponent extends AutoReplySettingComponent{
 		// 差し込みコンテンツタイトル
 		const insertContentsTitle = this.createElement('p' , '' , {
 		    style : 'margin-block-end:4px;'
-		}, '差し込みコンテンツ');
+		}, '回答挿入オプション');
 		insertContentsTitleContainer.appendChild(insertContentsTitle);
 		
 		// 差し込みコンテンツ更新ボタンコンテナ
@@ -53,7 +53,7 @@ export class InsertContentsComponent extends AutoReplySettingComponent{
 		const insertContentsAnotation = this.createElement('p' , '' , {
 		    style : 'font-size:0.75em;'
 		} , 
-		    '※件名と本文に回答を差し込めます。\n件名あるいは本文の挿入したい位置にカーソルを合わせてから、差し込みコンテンツをクリックしてください'
+		    '※件名と本文に回答を挿入できます。\n件名あるいは本文の挿入したい位置にカーソルを合わせてから、質問をクリックしてください。\n返信時はその質問に対する回答に差し替えられます。'
 		);
 		this.element.appendChild(insertContentsAnotation);
     }
@@ -82,8 +82,18 @@ export class InsertContentsComponent extends AutoReplySettingComponent{
 			} , `{{${question}}}`);
 			this.form.appendChild(insertContent);
 			this.#insertContents.push(insertContent);
-			insertContent.addEventListener('click', insertCallback);
+			insertContent.addEventListener('click', (e) => insertCallback(e));
 		}
+	}
+
+	/**
+	 * 
+	 * @return {Array<string>}
+	 */
+	getValue(){
+		return this.#insertContents.map(insertContent => {
+			return insertContent.innerText.replace(/[{}]/g,'');
+		})
 	}
 
 	activate(){
