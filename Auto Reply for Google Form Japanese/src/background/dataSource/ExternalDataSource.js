@@ -1,4 +1,4 @@
-import { BrowserLocalStorage } from "./BrowserLocalStorage/BrowserLocalStorage.js";
+import { BrowserLocalStorage } from "./BrowserLocalStorage.js";
 
 export class ExternalDataSource{
 

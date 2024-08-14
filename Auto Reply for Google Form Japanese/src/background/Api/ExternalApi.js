@@ -1,8 +1,8 @@
-import { GoogleFormApiClient } from "../Clients/GoogleFormApiClient.js";
-import { GmailApiClient } from "../Clients/GmailApiClient.js";
-import { GoogleAppsScriptApiClient } from "../Clients/GoogleAppsScriptApiClient.js";
-import { GoogleApiClient } from "../Clients/GoogleApiClient.js";
-import { ApiClientNotFoundException } from "../../../Exceptions/ApiClientNotFoundException.js";
+import { GoogleFormApiClient } from "./Clients/GoogleFormApiClient.js";
+import { GmailApiClient } from "./Clients/GmailApiClient.js";
+import { GoogleAppsScriptApiClient } from "./Clients/GoogleAppsScriptApiClient.js";
+import { GoogleApiClient } from "./Clients/GoogleApiClient.js";
+import { ApiClientNotFoundException } from "../../Exceptions/ApiClientNotFoundException.js";
 
 export class ExternalApi{
 
