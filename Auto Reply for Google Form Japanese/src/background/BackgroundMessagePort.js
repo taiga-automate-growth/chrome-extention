@@ -1,5 +1,5 @@
-import { ExternalApi } from "../Api/Request/ExternalApi.js";
-import { ExternalDataSource } from "../datasource/ExternalDataSource.js";
+import { ExternalApi } from "../Infrastracture/Api/Request/ExternalApi.js";
+import { ExternalDataSource } from "../Infrastracture/datasource/ExternalDataSource.js";
 
 export class BackgroundMessagePort{
     /** @type {Object} */
