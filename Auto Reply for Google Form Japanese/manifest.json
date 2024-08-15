@@ -12,7 +12,7 @@
     "action": {},
     "author": "oshima@automate-growth.com",
     "background": {
-        "service_worker": "src/background/background.js",
+        "service_worker": "src/Background/background.js",
         "type": "module"
     },
     "content_scripts": [{
