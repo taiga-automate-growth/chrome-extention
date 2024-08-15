@@ -87,20 +87,6 @@ export class AutoReplySetting{
 	}
 	
 	/**
-	 * @param {Array<string>} insertContents 
-	 */
-	setInsertContents(insertContents){
-		this.#insertContents = insertContents;
-	}
-	
-	/**
-	 * @param {Array<string>} aliases
-	 */
-	setAliases(aliases){
-		this.#aliases = aliases;
-	}
-	
-	/**
 	 * @return {Boolean}
 	 */
 	isCollectEmail(){
@@ -176,7 +162,6 @@ export class AutoReplySetting{
 	 */
 	update(inputData){
 		this.#formId = inputData.formId ?? "";
-        this.#scriptId = inputData.scriptId ?? "";
         this.#emailAddressCollectionType = inputData.emailAddressCollectionType ?? "";
         this.#status = inputData.status ?? "";
         this.#subject = inputData.subject ?? "";
