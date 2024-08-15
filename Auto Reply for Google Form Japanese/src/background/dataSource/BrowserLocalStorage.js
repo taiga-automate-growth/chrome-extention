@@ -20,7 +20,7 @@ export class BrowserLocalStorage{
         });
     }
 
-    save(data){
+    set(data){
         return new Promise((resolve,reject) => {
             chrome.storage.local.set(data)
             .then(() => {resolve('データ保存成功')})
