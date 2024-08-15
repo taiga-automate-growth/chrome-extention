@@ -6,6 +6,18 @@ import { RequiredEmptyException } from '../../Exceptions/RequiredEmptyException.
 import { AppsScript } from '../../Infrastracture/Api/AppsScript.js';
 
 export class CreateScriptUseCase{
+
+    /** @type {BrowserLocalStorageAutoReplySettingRepository} */
+	#repository;
+	
+	/** @type {AppsScript} */
+	#appsScript;
+
+	constructor(repository, appsScript){
+		this.#repository = repository;
+        this.#appsScript = appsScript;
+	}
+
 	/**
 	 * @param {string} formId フォームID
 	 * @param {Object} inputData フォームに入力されたデータ
@@ -14,9 +26,8 @@ export class CreateScriptUseCase{
 	async handle(formId,inputData){
         console.log(inputData);
 		let autoReplySetting;
-		const repository = new BrowserLocalStorageAutoReplySettingRepository();
         try {
-            autoReplySetting = await repository.findByFormId(formId);
+            autoReplySetting = await this.#repository.findByFormId(formId);
             autoReplySetting.update(inputData);
         } catch (error) {
             if(error instanceof DataNotFoundException){
@@ -35,15 +46,17 @@ export class CreateScriptUseCase{
 	        throw new RequiredEmptyException();
         }
         
+        console.log(autoReplySetting.getScriptId());
+        console.log(autoReplySetting.hasScript())
         if(!autoReplySetting.hasScript()){
             try {
-                const project = await new AppsScript().create('自動返信設定', autoReplySetting.getFormId());
+                const project = await this.#appsScript.create('自動返信設定', autoReplySetting.getFormId());
                 autoReplySetting.setScriptId(project.scriptId);
             } catch (e) {
                 throw e;
             }
         }
-        await repository.save(autoReplySetting);
+        await this.#repository.save(autoReplySetting);
 
         const manifestFile = {
             name: 'appsscript',
@@ -95,7 +108,7 @@ export class CreateScriptUseCase{
             ]}
         }
         
-        const project = await new AppsScript().update(autoReplySetting.getScriptId(),[manifestFile, scriptFile])
+        const project = await this.#appsScript.update(autoReplySetting.getScriptId(),[manifestFile, scriptFile])
         return project.scriptId;   
        
 	}

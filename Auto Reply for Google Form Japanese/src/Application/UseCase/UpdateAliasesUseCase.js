@@ -3,6 +3,18 @@ import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastractur
 
 
 export class UpdateAliasesUseCase{
+
+	/** @type {BrowserLocalStorageAutoReplySettingRepository} */
+	#repository;
+	
+	/** @type {Gmail} */
+	#gmail;
+
+	constructor(repository, gmail){
+		this.#repository = repository;
+		this.#gmail = gmail;
+	}
+
 	/**
 	 * 
 	 * @param {string} formId - GoogleフォームのID
@@ -10,14 +22,12 @@ export class UpdateAliasesUseCase{
 	 */
 	async handle(formId){
 		
-		const repository = new BrowserLocalStorageAutoReplySettingRepository();
-		
 		try{
 			
-			const autoReplySetting = await repository.findByFormId(formId);
-			const aliases = await new Gmail().getAliases();
+			const autoReplySetting = await this.#repository.findByFormId(formId);
+			const aliases = await this.#gmail.getAliases();
 			autoReplySetting.setAliases(aliases);
-			repository.save(autoReplySetting);
+			await this.#repository.save(autoReplySetting);
 			return {aliases: aliases};
 			
 		}catch(e){

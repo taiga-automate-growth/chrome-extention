@@ -5,19 +5,30 @@ import { Gmail } from '../../Infrastracture/Api/Gmail.js';
 import { AutoReplySetting } from '../../Domain/Models/AutoReplySetting.js';
 
 export class ActivateAutoReplyUseCase{
+	/** @type {BrowserLocalStorageAutoReplySettingRepository} */
+	#repository;
+	
+	/** @type {GoogleForm} */
+	#googleForm;
 
+	/** @type {Gmail} */
+	#gmail;
+
+	constructor(repository, googleForm, gmail){
+		this.#repository = repository;
+		this.#googleForm = googleForm;
+		this.#gmail = gmail;
+	}
 	/**
 	 * 
 	 * @param {string} formId 
 	 * @return {Promise} 
 	 */
 	async handle(formId){
-	
-		const repository = new BrowserLocalStorageAutoReplySettingRepository();
 		try{
-			const autoReplySetting = await repository.findByFormId(formId);
+			const autoReplySetting = await this.#repository.findByFormId(formId);
 			autoReplySetting.activate();
-			await repository.save(autoReplySetting);
+			await this.#repository.save(autoReplySetting);
 			return autoReplySetting.getAsObject();
 		}catch(e){
 			console.log(typeof e);
@@ -27,9 +38,9 @@ export class ActivateAutoReplyUseCase{
 				console.log('データが保存されていないエラーです');
 				const firstTimeData = {status: true};
 				
-				const formPromise = await new GoogleForm().getQuestionTitles(formId);
+				const formPromise = await this.#googleForm.getQuestionTitles(formId);
 
-				const aliasesPromise = await new Gmail().getAliases();
+				const aliasesPromise = await this.#gmail.getAliases();
 
 				const [form, aliases] = await Promise.all([formPromise, aliasesPromise]);
 
@@ -41,7 +52,7 @@ export class ActivateAutoReplyUseCase{
 
 				const data = new AutoReplySetting(firstTimeData);
 				console.log(data);
-				await repository.save(data);
+				await this.#repository.save(data);
 				return firstTimeData;
 			}
 		}

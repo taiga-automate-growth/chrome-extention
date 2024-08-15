@@ -2,13 +2,23 @@ import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastractur
 import { AppsScript } from '../../Infrastracture/Api/AppsScript.js';
 
 export class DeactivateAutoReplyUseCase{
+	/** @type {BrowserLocalStorageAutoReplySettingRepository} */
+	#repository;
+	
+	/** @type {AppsScript} */
+	#appsScript;
+
+	constructor(repository, appsScript){
+		this.#repository = repository;
+        this.#appsScript = appsScript;
+	}
 
 	async handle(formId){
-		const repository = new BrowserLocalStorageAutoReplySettingRepository();
+
 		try{
-			const autoReplySetting =  await repository.findByFormId(formId);
+			const autoReplySetting =  await this.#repository.findByFormId(formId);
 			autoReplySetting.deactivate();
-			await repository.save(autoReplySetting);
+			await this.#repository.save(autoReplySetting);
 			
 			if(!autoReplySetting.hasScript()){
 				return;
@@ -31,7 +41,7 @@ export class DeactivateAutoReplyUseCase{
 	        }
 			
 
-			const scriptId = await new AppsScript().update(autoReplySetting.getScriptId(), [manifestFile]);
+			const scriptId = await this.#appsScript.update(autoReplySetting.getScriptId(), [manifestFile]);
 			return scriptId;
 			
 		}catch(e){
