@@ -68,6 +68,6 @@ export class ActivationStatusComponent extends HtmlComponent{
 	}
 
 	getValue(){
-		return this.#toggleButton.getAttribute('aria-labal');
+		return this.#toggleButton.getAttribute('aria-checked');
 	}
 }
