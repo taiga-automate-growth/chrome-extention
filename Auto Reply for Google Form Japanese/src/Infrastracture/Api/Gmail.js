@@ -5,10 +5,11 @@ export class Gmail{
     #backgroundMessage;
 
     constructor(backgroundMessage){
-        this.#backgroundMessage = new BackgroundMessage();
+        this.#backgroundMessage = backgroundMessage;
     }
 
     async getAliases(){
+        console.log(this.#backgroundMessage);
         const aliases = await this.#backgroundMessage.send('getAliases');
         return aliases.sendAs.map(alias => {return alias.sendAsEmail});
     }

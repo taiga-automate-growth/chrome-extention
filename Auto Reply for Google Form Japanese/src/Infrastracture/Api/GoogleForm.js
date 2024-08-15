@@ -5,7 +5,7 @@ export class GoogleForm{
     #backgroundMessage;
 
     constructor(backgroundMessage){
-        this.#backgroundMessage = new BackgroundMessage();
+        this.#backgroundMessage = backgroundMessage;
     }
 
     async getQuestionTitles(formId){
