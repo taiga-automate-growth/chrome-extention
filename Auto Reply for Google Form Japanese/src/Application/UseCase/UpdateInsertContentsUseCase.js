@@ -1,4 +1,4 @@
-import { BackgroundMessage } from '../../Infrastracture/background/BackgroundMessage.js';
+import { GoogleForm } from '../../Infrastracture/Api/GoogleForm.js';
 import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
 
 export class UpdateInsertContentsUseCase{
@@ -8,14 +8,13 @@ export class UpdateInsertContentsUseCase{
 	 * @return {Promise}
 	 */
 	async handle(formId){
-		const form = await new BackgroundMessage('ApiRequest', 'Google Form', 'getForm').send({formId: formId});
 			
 		const repository = new BrowserLocalStorageAutoReplySettingRepository();
 		
 		try{
 		
 			const autoReplySetting = await repository.findByFormId(formId);
-			const insertContents = form.items.map(item => {return item.title});
+			const insertContents = await new GoogleForm().getQuestionTitles(formId);
 			autoReplySetting.setInsertContents(insertContents);
 			await repository.save(autoReplySetting);
 			return {insertContents: insertContents};

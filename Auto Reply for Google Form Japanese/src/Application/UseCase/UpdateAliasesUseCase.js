@@ -1,4 +1,4 @@
-import { BackgroundMessage } from '../../Infrastracture/background/BackgroundMessage.js';
+import { Gmail } from '../../Infrastracture/Api/Gmail.js';
 import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
 
 
@@ -15,8 +15,7 @@ export class UpdateAliasesUseCase{
 		try{
 			
 			const autoReplySetting = await repository.findByFormId(formId);
-			const gmail = await new BackgroundMessage('ApiRequest', 'Gmail', 'getAliases').send();
-			const aliases = gmail.sendAs.map(alias => {return alias.sendAsEmail});
+			const aliases = await new Gmail().getAliases();
 			autoReplySetting.setAliases(aliases);
 			repository.save(autoReplySetting);
 			return {aliases: aliases};

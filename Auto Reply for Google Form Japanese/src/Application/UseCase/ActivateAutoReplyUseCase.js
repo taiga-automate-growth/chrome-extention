@@ -1,6 +1,8 @@
-import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
-import { BackgroundMessage } from '../../Infrastracture/background/BackgroundMessage.js';
+import { BrowserLocalStorageAutoReplySettingRepository } from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
 import { DataNotFoundException } from '../../Exceptions/DataNotFoundException.js';
+import { GoogleForm } from '../../Infrastracture/Api/GoogleForm.js';
+import { Gmail } from '../../Infrastracture/Api/Gmail.js';
+import { AutoReplySetting } from '../../Domain/Models/AutoReplySetting.js';
 
 export class ActivateAutoReplyUseCase{
 
@@ -25,19 +27,21 @@ export class ActivateAutoReplyUseCase{
 				console.log('データが保存されていないエラーです');
 				const firstTimeData = {status: true};
 				
-				const formPromise = new BackgroundMessage('ApiRequest', 'form', 'getForm')
-				.send({formId: formId})
-				.catch(e => {throw e});
+				const formPromise = await new GoogleForm().getQuestionTitles(formId);
 
-				const aliasesPromise = new BackgroundMessage('ApiRequest', 'gmail', 'getAliases')
-				.send()
-				.catch(e => {throw e});
+				const aliasesPromise = await new Gmail().getAliases();
+
 				const [form, aliases] = await Promise.all([formPromise, aliasesPromise]);
 
-				firstTimeData.insertContents = form.items.map(item => {return item.title});
+				firstTimeData.insertContents = form;
 
-				firstTimeData.aliases = aliases.sendAs.map(alias => {return alias.sendAsEmail});
+				firstTimeData.aliases = aliases;
+				firstTimeData.formId = formId;
+				console.log(firstTimeData);
 
+				const data = new AutoReplySetting(firstTimeData);
+				console.log(data);
+				await repository.save(data);
 				return firstTimeData;
 			}
 		}

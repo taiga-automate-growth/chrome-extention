@@ -3,7 +3,7 @@ import { AutoReplySetting } from '../../Domain/Models/AutoReplySetting.js';
 import { DataNotFoundException } from '../../Exceptions/DataNotFoundException.js';
 import { EmailNotCollectException } from '../../Exceptions/EmailNotCollectException.js';
 import { RequiredEmptyException } from '../../Exceptions/RequiredEmptyException.js';
-import { BackgroundMessage } from '../../Infrastracture/background/BackgroundMessage.js';
+import { AppsScript } from '../../Infrastracture/Api/AppsScript.js';
 
 export class CreateScriptUseCase{
 	/**
@@ -37,9 +37,8 @@ export class CreateScriptUseCase{
         
         if(!autoReplySetting.hasScript()){
             try {
-                const res = await new BackgroundMessage('ApiRequest', 'Apps Script', 'createScript')
-                .send({ title: '自動返信設定', parentId: autoReplySetting.getFormId() });
-                autoReplySetting.setScriptId(res.scriptId);
+                const project = await new AppsScript().create('自動返信設定', autoReplySetting.getFormId());
+                autoReplySetting.setScriptId(project.scriptId);
             } catch (e) {
                 throw e;
             }
@@ -96,12 +95,8 @@ export class CreateScriptUseCase{
             ]}
         }
         
-        return new Promise((resolve,reject) => {
-
-            new BackgroundMessage('ApiRequest', 'Apps Script','updateScript')
-            .send({scriptId: autoReplySetting.getScriptId(), files: [manifestFile, scriptFile]})
-            .then(res =>  resolve(res.scriptId))
-            .catch(e => reject(e));
-        });
+        const project = await new AppsScript().update(autoReplySetting.getScriptId(),[manifestFile, scriptFile])
+        return project.scriptId;   
+       
 	}
 }

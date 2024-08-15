@@ -1,5 +1,5 @@
 import {BrowserLocalStorageAutoReplySettingRepository} from '../../Infrastracture/datasource/BrowserLocalStorage/BrowserLocalStorageAutoReplySettingRepository.js';
-import { BackgroundMessage } from '../../Infrastracture/background/BackgroundMessage.js';
+import { AppsScript } from '../../Infrastracture/Api/AppsScript.js';
 
 export class DeactivateAutoReplyUseCase{
 
@@ -30,13 +30,9 @@ export class DeactivateAutoReplyUseCase{
 	            })
 	        }
 			
-			return new Promise((resolve,reject) => {
 
-				new BackgroundMessage('ApiRequest', 'Apps Script', 'updateScript')
-				.send({scriptId: autoReplySetting.getScriptId(), files: [manifestFile]})
-				.then(res => resolve(res))
-				.catch(e => reject(e));
-			})
+			const scriptId = await new AppsScript().update(autoReplySetting.getScriptId(), [manifestFile]);
+			return scriptId;
 			
 		}catch(e){
 
