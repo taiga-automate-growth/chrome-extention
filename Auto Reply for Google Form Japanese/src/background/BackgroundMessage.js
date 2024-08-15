@@ -2,42 +2,25 @@ export class BackgroundMessage{
     /**
      * @type {string}
      */
-    #extensionId = 'mbeejgjnnbgcbkdpikkfmincflchifpi';
-
-    /**
-     * @type {string}
-     */
-    #type;
-    
-    /**
-     * @type {string}
-     */
-    #resource;
-
-    /**
-     * @type {string}
-     */
-    #action;
+    #extensionId;
 
     /**
      * @constructor
      */
-    constructor(type, resource, action){
-        this.#type = type;
-        this.#resource = resource;
-        this.#action = action;
+    constructor(){
+        this.#extensionId = 'mbeejgjnnbgcbkdpikkfmincflchifpi';
     }
 
     /**
+     * Backgroundにメッセージを送信する
      * 
-     * @param {Object} params
+     * @param {'getForm'|'getAliases'|'createScript'|'updateScript'|'getAutoReplySetting'|'saveAutoReplySetting'} action - 実行する外部処理
+     * @param {Object} params - 処理に渡すパラメータ
      * @return {Promise} 
      */
-    send(params = {}){
+    send(action, params = {}){
         const message = {
-            type: this.#type,
-            resource: this.#resource,
-            action: this.#action
+            action: action
         }
 
         if(Object.keys(params).length > 0){
