@@ -7,18 +7,26 @@ export class BrowserLocalStorageAutoReplySettingRepository{
     /** @type {string} */
     #key;
 
-    constructor(){
+    /** @type {BackgroundMessage} */
+    #backgroundMessage;
+
+    /**
+     * 
+     * @param {BackgroundMessage} backgroundMessage 
+     */
+    constructor(backgroundMessage){
+        this.#backgroundMessage = backgroundMessage;
         this.#key = 'auto-reply-google-form-for-japanese';
     }
     /**
      * 復元
      * 
      * @param {string} formId - GoogleフォームのID
-     * @return {Promise} 自動返信設定インスタンス 
+     * @return {Promise<AutoReplySetting>} 自動返信設定インスタンス 
      */
     async findByFormId(formId){
         console.log(formId);
-        const allDatas = await new BackgroundMessage().send('getAutoReplySetting',{key: this.#key});
+        const allDatas = await this.#backgroundMessage.send('getAutoReplySetting',{key: this.#key});
         const settingData = allDatas[this.#key][formId];
         console.log(settingData);
 
@@ -41,12 +49,10 @@ export class BrowserLocalStorageAutoReplySettingRepository{
         console.log(formId);
         const saveData = autoReplySetting.getAsObject();
 
-        new BackgroundMessage()
-        .send('getAutoReplySetting',{key: this.#key})
+        this.#backgroundMessage.send('getAutoReplySetting',{key: this.#key})
         .then(allDatas => {
             allDatas[this.#key][formId] = saveData;
-            new BackgroundMessage()
-            .send('saveAutoReplySetting',{data: allDatas})
+            this.#backgroundMessage.send('saveAutoReplySetting',{data: allDatas})
             .then(() => {})
             .catch(error => {throw error});
         });
