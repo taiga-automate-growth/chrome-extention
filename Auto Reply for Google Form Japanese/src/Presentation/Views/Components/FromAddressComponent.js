@@ -98,7 +98,7 @@ export class FromAddressComponent extends AutoReplySettingComponent{
 			aliasContainer.appendChild(label);
 			if(alias === fromAddress) radioButton.checked = true;
 		}
-
+		console.log(this.#aliases);
 	}
 
 	/**
@@ -106,8 +106,10 @@ export class FromAddressComponent extends AutoReplySettingComponent{
 	 * @return {string}
 	 */
 	getValue(){
+		console.log(this.#aliases);
 		return this.#aliases.reduce((fromAddress,alias) => {
-			radioButton = alias.children[0];
+			console.log(alias);
+			const radioButton = alias.children[0];
 			if(radioButton.checked) fromAddress = radioButton.value;
 			return fromAddress
 		},"");
@@ -128,6 +130,7 @@ export class FromAddressComponent extends AutoReplySettingComponent{
             const label = alias.children[1];
             label.style.color = 'black';
         }
+		this.#updateButton.activate();
 	}
 
 	deactivate(){
@@ -139,5 +142,6 @@ export class FromAddressComponent extends AutoReplySettingComponent{
             const label = alias.children[1];
             label.style.color = 'darkgray';
         }
+		this.#updateButton.deactivate();
 	}
 }

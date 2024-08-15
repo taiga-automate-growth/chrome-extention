@@ -1,7 +1,12 @@
 import { HtmlComponent } from "./HtmlComponent.js";
 
 export class UpdateButton extends HtmlComponent{
-    
+    /**
+	 * @type {HTMLInputElement}
+	 * @private
+	 */
+	element;
+
     constructor(){
 		super();
         // 更新ボタン
@@ -29,4 +34,12 @@ export class UpdateButton extends HtmlComponent{
 		this.element.appendChild(path2);
 		
     }
+
+	activate(){
+		this.element.disabled = false;
+	}
+
+	deactivate(){
+		this.element.disabled = true;
+	}
 }

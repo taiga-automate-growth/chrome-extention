@@ -102,6 +102,7 @@ export class InsertContentsComponent extends AutoReplySettingComponent{
 		for(let insertContent of this.#insertContents){
             insertContent.style.color = 'black';
         }
+		this.#updateButton.activate();
 	}
 
 	deactivate(){
@@ -110,5 +111,6 @@ export class InsertContentsComponent extends AutoReplySettingComponent{
 		for(let insertContent of this.#insertContents){
             insertContent.style.color = 'darkgray';
         }
+		this.#updateButton.deactivate();
 	}
 }
