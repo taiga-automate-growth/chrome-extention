@@ -33,7 +33,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
     console.log('バックグラウンドにメッセージが届いています');
     new BackgroundMessagePort(message, sender, sendResponse)
-    .sort();
+    .handle();
 });
 
 // chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {

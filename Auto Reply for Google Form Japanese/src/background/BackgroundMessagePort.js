@@ -1,5 +1,8 @@
-import { ExternalApi } from "./Api/ExternalApi.js";
-import { ExternalDataSource } from "./dataSource/ExternalDataSource.js";
+import { ApiClientNotFoundException } from "../Exceptions/ApiClientNotFoundException.js";
+import { GmailApiClient } from "./Api/Clients/GmailApiClient.js";
+import { GoogleAppsScriptApiClient } from "./Api/Clients/GoogleAppsScriptApiClient.js";
+import { GoogleFormApiClient } from "./Api/Clients/GoogleFormApiClient.js";
+import { BrowserLocalStorage } from "./dataSource/BrowserLocalStorage.js";
 
 export class BackgroundMessagePort{
     /** @type {Object} */
@@ -21,27 +24,42 @@ export class BackgroundMessagePort{
         this.#sendResponse = sendResponse;
     }
 
-    /**
-     * 
-     */
-    sort(){
-        console.log('メッセージ仕分け開始');
-        console.log(this.#message);
-        if(this.#message.type === 'ApiRequest'){
-            new ExternalApi(this.#message).request()
-            .then(result => {
-                console.log('外部APIへのリクエスト結果です');
-                console.log(result);
-                this.#sendResponse(result)})
-            .catch(error => this.#sendResponse(error));
+    async handle(){
+        const action = this.#message.action;
+        const params = this.#message.params;
 
-        }else if(this.#message.type === 'dataSourceAccess'){
-            new ExternalDataSource(this.#message).access()
-            .then(result => {
-                console.log('外部データソースから取得したデータです')
-                console.log(result);
-                this.#sendResponse(result)})
-            .catch(error => this.#sendResponse(error));
+        let externalServiceTaskResult;
+
+        switch(action){
+            case 'getForm':
+                externalServiceTaskResult = await new GoogleFormApiClient().getForm(params.formId);
+                break;
+
+            case 'getAliases':
+                externalServiceTaskResult = await new GmailApiClient().getAliases();
+                break;
+
+            case 'createScript':
+                externalServiceTaskResult = await new GoogleAppsScriptApiClient().createScript(params.title, params.parentId);
+                break;
+
+            case 'updateScript':
+                externalServiceTaskResult = await new GoogleAppsScriptApiClient().updateScript(params.scriptId, params.files);
+                break;
+           
+            case 'getAutoReplySetting':
+                externalServiceTaskResult = await new BrowserLocalStorage().get(params.key);
+                break;
+
+            case 'saveAutoReplySetting':
+                externalServiceTaskResult = await new BrowserLocalStorage().set(params.data);
+                break;
+
+            default:
+                throw new ApiClientNotFoundException('外部サービスが見つかりませんでした');
         }
+
+        this.#sendResponse(externalServiceTaskResult);
+        
     }
 }
