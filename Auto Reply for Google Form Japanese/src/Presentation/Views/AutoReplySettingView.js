@@ -274,6 +274,7 @@ export class AutoReplySettingView{
 		this.#fromName.activate();
 		this.#cc.activate();
 		this.#bcc.activate();
+		this.#createScriptButton.activate();
 	}
 
 	deactivate(){
@@ -284,6 +285,7 @@ export class AutoReplySettingView{
 		this.#fromName.deactivate();
 		this.#cc.deactivate();
 		this.#bcc.deactivate();
+		this.#createScriptButton.deactivate();
 	}
 
 	/** @return {object} */
@@ -324,6 +326,10 @@ export class AutoReplySettingView{
 
 	loadEnd(){
 		this.#loading.end();
+	}
+
+	error(message){
+		window.alert(message);
 	}
 	
 }
