@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "Auto Reply Google Form for Japanese",
-    "version": "0.1.0",
+    "name": "Googleフォーム自動返信拡張機能（日本語版）",
+    "version": "1.0.0",
     "description": "Googleフォームに自動返信を設定する",
     "icons": {
         "16": "icon/16.png",
@@ -17,7 +17,7 @@
     },
     "content_scripts": [{
         "matches": ["https://docs.google.com/forms/d/*"],
-        "js": ["src/loader.js"]
+        "js": ["src/content-script.js"]
     }],
     "permissions": [
         "identity",
