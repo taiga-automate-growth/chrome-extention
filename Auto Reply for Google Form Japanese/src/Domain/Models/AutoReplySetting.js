@@ -142,6 +142,20 @@ export class AutoReplySetting{
 			bcc: this.#bcc
 		}
 	}
+
+	/**
+	 * @param {Array<string>} insertContents 
+	 */
+	setInsertContents(insertContents){
+		this.#insertContents = insertContents;
+	}
+
+	/**
+	 * @param {Array<string>} aliases
+	 */
+	setAliases(aliases){
+		this.#aliases = aliases;
+	}
 	
 	/**
 	 * @return {string}
