@@ -7,7 +7,8 @@ export class UpdateButton extends HtmlComponent{
 			'button',
 			'auto-reply-update-button',
 			{
-				style: 'display: block; background:none; border: none; margin: 16px;'
+				style: 'display: block; background:none; border: none; margin: 16px;',
+				disabled: true
 			}
 		);
         // 更新ボタン
