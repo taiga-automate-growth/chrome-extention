@@ -98,7 +98,6 @@ export class FromAddressComponent extends AutoReplySettingComponent{
 			aliasContainer.appendChild(label);
 			if(alias === fromAddress) radioButton.checked = true;
 		}
-		console.log(this.#aliases);
 	}
 
 	/**
@@ -106,9 +105,7 @@ export class FromAddressComponent extends AutoReplySettingComponent{
 	 * @return {string}
 	 */
 	getValue(){
-		console.log(this.#aliases);
 		return this.#aliases.reduce((fromAddress,alias) => {
-			console.log(alias);
 			const radioButton = alias.children[0];
 			if(radioButton.checked) fromAddress = radioButton.value;
 			return fromAddress

@@ -47,7 +47,6 @@ export class GoogleApiClient{
                 resolve('成功');
             })
             .catch(error => {
-                console.log(error);
                 reject(error);
             });
         });

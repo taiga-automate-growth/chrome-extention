@@ -14,7 +14,6 @@ export class GetAutoReplySettingUseCase{
 			const savedData = autoReplySetting.getAsObject();
 			return savedData;
 		}catch(e){
-			console.log(e);
 			return {status: false};
 		}
 	}

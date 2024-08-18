@@ -31,16 +31,13 @@ export class ActivateAutoReplyUseCase{
 			await this.#repository.save(autoReplySetting);
 			return autoReplySetting.getAsObject();
 		}catch(e){
-			console.log(typeof e);
-			console.log(e);
 			if(e instanceof DataNotFoundException){
 
-				console.log('データが保存されていないエラーです');
 				const firstTimeData = {status: true};
 				
-				const formPromise = await this.#googleForm.getQuestionTitles(formId);
+				const formPromise = this.#googleForm.getQuestionTitles(formId);
 
-				const aliasesPromise = await this.#gmail.getAliases();
+				const aliasesPromise = this.#gmail.getAliases();
 
 				const [form, aliases] = await Promise.all([formPromise, aliasesPromise]);
 
@@ -48,10 +45,8 @@ export class ActivateAutoReplyUseCase{
 
 				firstTimeData.aliases = aliases;
 				firstTimeData.formId = formId;
-				console.log(firstTimeData);
 
 				const data = new AutoReplySetting(firstTimeData);
-				console.log(data);
 				await this.#repository.save(data);
 				return firstTimeData;
 			}

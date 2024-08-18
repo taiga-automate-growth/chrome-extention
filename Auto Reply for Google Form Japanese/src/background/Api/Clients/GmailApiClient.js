@@ -20,7 +20,6 @@ export class GmailApiClient extends GoogleApiClient{
      * @return {Promise}
      */
     async getAliases(){
-        console.log('GmailAPIのエイリアスにGETリクエストを送ります');
         await this.getAuthToken();
         return new Promise((resolve,reject) =>{
 

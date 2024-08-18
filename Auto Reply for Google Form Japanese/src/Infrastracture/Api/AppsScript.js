@@ -10,7 +10,6 @@ export class AppsScript{
 
     async create(title, parentId){
         const params = {title: title, parentId: parentId};
-        console.log(this.#backgroundMessage);
         const project = await this.#backgroundMessage.send('createScript',params);
         return project;
     }

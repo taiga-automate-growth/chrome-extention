@@ -31,8 +31,6 @@ export class BackgroundMessage{
 
             chrome.runtime.sendMessage(this.#extensionId, message)
             .then(response => {
-                console.log('バックグラウンドから取得したデータです');
-                console.log(response);
                 resolve(response);})
             .catch(error => {reject(error);});
         });

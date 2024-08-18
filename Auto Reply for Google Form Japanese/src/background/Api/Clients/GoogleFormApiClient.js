@@ -22,10 +22,7 @@ export class GoogleFormApiClient extends GoogleApiClient{
      * @return {Promise} 
      */
     async getForm(formId){
-        console.log(formId);
-        console.log('フォームAPIにGETリクエストを送ります');
         await this.getAuthToken();
-        console.log(this.token);
         return new Promise((resolve,reject) => {
 
             fetch(`${this.#baseUrl}/v1/forms/${formId}?key=${this.#apiKey}`,{
@@ -37,14 +34,11 @@ export class GoogleFormApiClient extends GoogleApiClient{
                 'contentType': 'json'
             })
             .then(response => {
-                console.log(response);
                 return response.json()
             })
             .then(form => {
-                console.log(form);
                 resolve(form)})
             .catch(error => {
-                console.log(error);
                 reject(error)
             });
         });

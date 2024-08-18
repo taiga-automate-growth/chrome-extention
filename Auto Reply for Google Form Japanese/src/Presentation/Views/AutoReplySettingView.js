@@ -154,7 +154,6 @@ export class AutoReplySettingView{
 		// 自動返信トグルのクリックイベントにリスナーを追加
 		this.#status.getToggleButton().addEventListener('click', (e) => {
 			const activation = e.currentTarget.getAttribute('aria-checked');
-			console.log(activation);
 			if(activation === 'true'){
 				deactivateCallback(formId);
 				this.deactivate();
@@ -166,7 +165,6 @@ export class AutoReplySettingView{
 		
 		// スクリプト作成ボタンのクリックイベントにリスナーを追加
 		this.#createScriptButton.getElement().addEventListener('click', () => {
-			console.log(this.getInputData());
 			createScriptCallback(formId,this.getInputData());
 		});
 		
@@ -232,7 +230,6 @@ export class AutoReplySettingView{
 	
 	/** @param {object} datas*/
 	update(datas){
-		console.log(datas);
 		if('status' in datas && datas.status !== ""){
 			this.#status.setValue(datas.status);
 		}
@@ -291,7 +288,6 @@ export class AutoReplySettingView{
 	/** @return {object} */
 	getInputData(){
 		const collectMailAddressConfigContainer = document.getElementsByClassName('uZH9Ac')[0];
-		console.log(collectMailAddressConfigContainer);
 		const collectMailAddressConfigListBox = collectMailAddressConfigContainer.children[1];
 		const collectMailConfig = collectMailAddressConfigListBox.getElementsByClassName('MocG8c HZ3kWc  LMgvRb KKjvXb')[0];
         

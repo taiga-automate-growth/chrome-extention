@@ -24,7 +24,6 @@ export class CreateScriptUseCase{
 	 * @return {Promise}
 	 */
 	async handle(formId,inputData){
-        console.log(inputData);
 		let autoReplySetting;
         try {
             autoReplySetting = await this.#repository.findByFormId(formId);
@@ -35,8 +34,6 @@ export class CreateScriptUseCase{
                 autoReplySetting = new AutoReplySetting(inputData);
             }
         }
-
-        console.log(autoReplySetting);
         
         if(!autoReplySetting.isCollectEmail()){
 	        throw new EmailNotCollectException();
@@ -46,8 +43,6 @@ export class CreateScriptUseCase{
 	        throw new RequiredEmptyException();
         }
         
-        console.log(autoReplySetting.getScriptId());
-        console.log(autoReplySetting.hasScript())
         if(!autoReplySetting.hasScript()){
             try {
                 const project = await this.#appsScript.create('自動返信設定', autoReplySetting.getFormId());

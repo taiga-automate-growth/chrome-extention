@@ -8,13 +8,11 @@ export class DIContainer{
 
     register(key, Constructor, ...args){
         const instance = new Constructor(...args);
-        console.log(instance);
         this.#registry.set(key, instance);
     }
 
     get(key){
         const instance = this.#registry.get(key);
-        console.log(instance);
         if(!instance){
             throw new Error('インスタンスが見つかりませんでした');
         }

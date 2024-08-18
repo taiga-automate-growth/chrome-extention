@@ -103,7 +103,6 @@ export class AutoReplySettingController{
 			const scriptId = await this.#createScriptUseCase.handle(formId,inputData);
 			this.#view.createScriptDone(scriptId);
 		} catch (error) {
-			console.log(error);
 			this.#errorHandle(error);
 		}
 		this.#view.loadEnd();

@@ -9,7 +9,6 @@ export class Gmail{
     }
 
     async getAliases(){
-        console.log(this.#backgroundMessage);
         const aliases = await this.#backgroundMessage.send('getAliases');
         return aliases.sendAs.map(alias => {return alias.sendAsEmail});
     }

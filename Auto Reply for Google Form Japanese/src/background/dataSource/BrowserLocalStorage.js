@@ -5,7 +5,6 @@ export class BrowserLocalStorage{
      * @return {Promise} 
      */
     get(key){
-        console.log('ブラウザローカルストレージから値を取り出します');
         return new Promise((resolve,reject)=>{
             chrome.storage.local.get(key)
             .then(data => {
@@ -13,8 +12,6 @@ export class BrowserLocalStorage{
                     reject(NotFoundDataException(`ローカルストレージに${key}というデータは存在しませんでした`));
                     return;
                 }
-                console.log('ブラウザローカルストレージから取り出したデータです');
-                console.log(data);
                 resolve(data)})
             .catch(e => {reject(e)});
         });

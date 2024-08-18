@@ -25,10 +25,8 @@ export class BrowserLocalStorageAutoReplySettingRepository{
      * @return {Promise<AutoReplySetting>} 自動返信設定インスタンス 
      */
     async findByFormId(formId){
-        console.log(formId);
         const allDatas = await this.#backgroundMessage.send('getAutoReplySetting',{key: this.#key});
         const settingData = allDatas[this.#key][formId];
-        console.log(settingData);
 
         if(settingData === undefined || settingData === null || Object.keys(settingData).length === 0) {
             throw new DataNotFoundException('このフォームに関する情報は保存されていません');
@@ -43,10 +41,7 @@ export class BrowserLocalStorageAutoReplySettingRepository{
      * @return {Promise}
      */
     save(autoReplySetting){
-        console.log(autoReplySetting);
         const formId = autoReplySetting.getFormId();
-        console.log('今から保存するデータのフォームIDです');
-        console.log(formId);
         const saveData = autoReplySetting.getAsObject();
 
         this.#backgroundMessage.send('getAutoReplySetting',{key: this.#key})
