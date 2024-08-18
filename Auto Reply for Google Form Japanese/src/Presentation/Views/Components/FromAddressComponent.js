@@ -37,9 +37,8 @@ export class FromAddressComponent extends AutoReplySettingComponent{
 		fromAddressTitleContainer.appendChild(fromAddressTitle);
 
         // 更新ボタンコンテナ
-		const updateButtonContainer = this.createElement('button' , 'auto-reply-form' , {
-		    style : 'background:white; border:none;',
-		    disabled : true
+		const updateButtonContainer = this.createElement('div' , 'auto-reply-form' , {
+		    style : 'background:white; border:none; float: right;'
 		});
 		fromAddressTitleContainer.appendChild(updateButtonContainer);
 		
@@ -52,9 +51,14 @@ export class FromAddressComponent extends AutoReplySettingComponent{
 		const fromAddressAnotation = this.createElement('p' , '' , {
 		    style : 'font-size:0.75em;'
 		} , 
-		    '※表示されるアドレスは現在ログイン中のGoogleアカウントGmailのエイリアスとして登録されているものに限ります。Gmailエイリアス登録は<a target="_brank" href="https://support.google.com/a/answer/33327?hl=ja">こちら<a>から'
+		    '※表示されるアドレスは現在ログイン中のGoogleアカウントGmailのエイリアスとして登録されているものに限ります。Gmailエイリアス登録は'
 		);
 		this.element.appendChild(fromAddressAnotation);
+		const anotationLink = this.createElement('a','',{
+			target: "_blank",
+			href: "https://support.google.com/a/answer/33327?hl=ja"
+		},"こちら");
+		fromAddressAnotation.appendChild(anotationLink);
 		
     }
 

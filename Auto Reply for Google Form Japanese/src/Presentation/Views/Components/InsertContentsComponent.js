@@ -39,9 +39,8 @@ export class InsertContentsComponent extends AutoReplySettingComponent{
 		insertContentsTitleContainer.appendChild(insertContentsTitle);
 		
 		// 差し込みコンテンツ更新ボタンコンテナ
-		const updateButtonContainer = this.createElement('button' , 'auto-reply-form' , {
-		    style : 'background:white; border:none;',
-		    disabled : true
+		const updateButtonContainer = this.createElement('div' , 'auto-reply-form' , {
+		    style : 'background:white; border:none;'
 		});
 		insertContentsTitleContainer.appendChild(updateButtonContainer);
 		
@@ -110,6 +109,7 @@ export class InsertContentsComponent extends AutoReplySettingComponent{
 		if(this.#insertContents.length === 0) return;
 		for(let insertContent of this.#insertContents){
             insertContent.style.color = 'darkgray';
+			insertContent.style.cursor = 'default';
         }
 		this.#updateButton.deactivate();
 	}
